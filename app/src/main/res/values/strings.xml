@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">HostelManagementSystem</string>
+    <string name="already_a_user">ALREADY A USER?</string>
+    <string name="welcome_to_hms">HOTEL MANAGEMENT SYSTEM</string>
+    <string name="create_a_new_account">CREATE A NEW ACCOUNT?</string>
+    <string name="email">email</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="create">CREATE</string>
+    <string name="create_a_new_account1">CREATE A NEW ACCOUNT</string>
 </resources>
