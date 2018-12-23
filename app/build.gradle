@@ -36,5 +36,7 @@ dependencies {
 
     // FirebaseUI for Firebase Realtime Database
     implementation 'com.firebaseui:firebase-ui-database:4.2.1'
+
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
 apply plugin: 'com.google.gms.google-services'
