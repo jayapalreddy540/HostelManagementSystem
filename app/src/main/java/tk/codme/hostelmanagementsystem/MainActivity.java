@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog mSignoutProgress;
     private Button mlogout,mWardens,mAddwarden;
+    private TextView mStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         mlogout=(Button)findViewById(R.id.btnLogout);
         mWardens=(Button)findViewById(R.id.btnWardens);
         mAddwarden=(Button)findViewById(R.id.btnAddwarden);
+        mStatus=(TextView)findViewById(R.id.txtStatus);
         mlogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent awIntent=new Intent(MainActivity.this,AddWardenActivity.class);
                 startActivity(awIntent);
+                awIntent.putExtra("designation","warden");
+
             }
         });
     }

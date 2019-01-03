@@ -25,6 +25,7 @@
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".WardenListActivity"
             android:parentActivityName=".MainActivity"/>
+        <activity android:name=".StudentListActivity" />
     </application>
 
 </manifest>
