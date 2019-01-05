@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -33,7 +34,7 @@ public class AddWardenActivity extends AppCompatActivity {
     private TextInputLayout mPassword;
     private TextInputLayout mMobile;
     private Button mCreateBtn;
-
+private TextView headText;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
@@ -46,7 +47,8 @@ public class AddWardenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        final String user=getIntent().getStringExtra("designation");
+        final String designation=getIntent().getStringExtra("designation");
+        final String pid=getIntent().getStringExtra("pid");
 
         setContentView(R.layout.activity_addwarden);
 
@@ -58,7 +60,11 @@ public class AddWardenActivity extends AppCompatActivity {
         mPassword=(TextInputLayout)findViewById(R.id.reg_pass);
         mMobile=(TextInputLayout)findViewById(R.id.reg_mobile);
         mCreateBtn=(Button)findViewById(R.id.reg_create_btn);
+        headText=(TextView)findViewById(R.id.headingtext);
 
+        if(designation.equals("student")){
+            headText.setText("CREATE STUDENT");
+        }
         mRegProgress=new ProgressDialog(this);
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,14 +80,14 @@ public class AddWardenActivity extends AppCompatActivity {
                     mRegProgress.setMessage("Please wait..  we are creating your account");
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
-                    register_user(display_name,email,password,mobile,user);
+                    register_user(display_name,email,password,mobile,designation,pid);
                 }
 
             }
         });
     }
 
-    private void  register_user(final String display_name, String email, String password,final String mMobile,final String user){
+    private void  register_user(final String display_name, String email, String password,final String mMobile,final String user,final String pid){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -93,8 +99,9 @@ public class AddWardenActivity extends AppCompatActivity {
                             mRef=FirebaseDatabase.getInstance().getReference().child("users").child(uid);
                             HashMap<String,String> userMap=new HashMap<>();
                             userMap.put("name",display_name);
-                            userMap.put("designation","warden");
+                            userMap.put("designation",user);
                             userMap.put("mobile",mMobile);
+                            userMap.put("caretaker",pid);
                             userMap.put("image","default");
                             userMap.put("thumb_image","default");
                             mRef.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -23,13 +24,16 @@ public class StudentListActivity extends AppCompatActivity {
 
     private RecyclerView mUsersList;
     private Query mUsersDatabase;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wardenlist);
 
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("designation").equalTo("student");
+        mAuth=FirebaseAuth.getInstance();
+        String cid=mAuth.getCurrentUser().getUid();
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("caretaker").equalTo(cid);
 
 
         mUsersList = (RecyclerView) findViewById(R.id.wardens_list);
