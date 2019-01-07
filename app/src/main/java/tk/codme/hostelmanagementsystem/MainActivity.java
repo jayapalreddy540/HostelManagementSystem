@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mlogout,mWardens,mAddwarden;
     private TextView mStatus;
 
-    private String designation;
+    private String designation="student";//default
     private String currentUid;
 
     @Override
@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
 
+        final String email=getIntent().getStringExtra("email");
+        final String password=getIntent().getStringExtra("password");
+        if(getIntent().hasExtra("designation"))
+             designation=getIntent().getStringExtra("designation");
 
         mSignoutProgress=new ProgressDialog(this);
         mlogout=(Button)findViewById(R.id.btnLogout);
@@ -48,12 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
         if(currentUser!=null) {
             currentUid = currentUser.getUid();
-            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUid);
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s").child(currentUid);
             mUserDatabase.keepSynced(true);
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                     designation = dataSnapshot.child("designation").getValue().toString();
                      String name = dataSnapshot.child("name").getValue().toString();
                     mStatus.setText("you're " + name + " , " + designation);
 
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
                                 Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
                                 awIntent.putExtra("designation", "warden");
                                 awIntent.putExtra("pid",currentUid);
+                                awIntent.putExtra("email",email);
+                                awIntent.putExtra("password",password);
                                 startActivity(awIntent);
                             }
                         });
@@ -90,13 +95,16 @@ public class MainActivity extends AppCompatActivity {
                                 Intent aw1Intent = new Intent(MainActivity.this, AddWardenActivity.class);
                                 aw1Intent.putExtra("designation", "student");
                                 aw1Intent.putExtra("pid",currentUid);
+                                aw1Intent.putExtra("email",email);
+                                aw1Intent.putExtra("password",password);
                                 startActivity(aw1Intent);
 
 
                             }
                         });
                     } else if (designation.equals("student")) {
-
+                        mWardens.setVisibility(View.INVISIBLE);
+                        mAddwarden.setVisibility(View.INVISIBLE);
                     }
                 }
 
@@ -122,28 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 sendToStart();
             }
         });
-        mWardens.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent wlIntent=new Intent(MainActivity.this,WardenListActivity.class);
-                startActivity(wlIntent);
-            }
-        });
-        mAddwarden.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent awIntent=new Intent(MainActivity.this,AddWardenActivity.class);
-                if(designation.equals("admin")) {
-                    awIntent.putExtra("designation","warden");
-                    awIntent.putExtra("pid",currentUid);
-                }
-                else if(designation.equals("warden")){
-                    awIntent.putExtra("designation","student");
-                    awIntent.putExtra("pid",currentUid);
-                }
-                startActivity(awIntent);
-            }
-        });
+
     }
 
     @Override

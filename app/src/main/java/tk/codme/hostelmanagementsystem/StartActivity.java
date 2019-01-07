@@ -22,6 +22,7 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(reg_intent);
             }
         });
+        mRegBtn.setVisibility(View.INVISIBLE);
         mLogBtn=(Button)findViewById(R.id.start_login_btn);
         mLogBtn.setOnClickListener(new View.OnClickListener() {
             @Override

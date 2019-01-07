@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -16,6 +19,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -23,7 +32,10 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout mLoginEmail;
     private TextInputLayout mLoginPassword;
     private Button mLogin_btn;
+    private RadioGroup usergroup;
+    private RadioButton userstate;
 
+    private String state="student";//default
     private FirebaseAuth mAuth;
 
     private ProgressDialog mLoginProgress;
@@ -37,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginEmail=(TextInputLayout)findViewById(R.id.login_Email);
         mLoginPassword=(TextInputLayout)findViewById(R.id.login_Pass);
         mLogin_btn=(Button)findViewById(R.id.login_btn);
+        usergroup=(RadioGroup)findViewById(R.id.usergroup);
 
         mLoginProgress=new ProgressDialog(this);
         mLogin_btn.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email=mLoginEmail.getEditText().getText().toString();
                 String password=mLoginPassword.getEditText().getText().toString();
+                state=checkButton(v);
 
                 if(!TextUtils.isEmpty(email)||!TextUtils.isEmpty((password))){
                     mLoginProgress.setTitle("logging  In");
@@ -55,16 +69,45 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String email, String password) {
+    private void loginUser(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     mLoginProgress.dismiss();
-                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mainIntent);
-                    finish();
+                    mAuth=FirebaseAuth.getInstance();
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    String currentUid=currentUser.getUid();
+                    DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(state + "s").child(currentUid);
+                    mUserDatabase.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                if(dataSnapshot.child("name").exists()){
+                                                                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                                                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                    mainIntent.putExtra("email",email);
+                                                                    mainIntent.putExtra("password",password);
+                                                                    mainIntent.putExtra("designation",state);
+                                                                    startActivity(mainIntent);
+                                                                    finish();
+                                                                }
+                                                                else{
+                                                                    FirebaseAuth.getInstance().signOut();
+                                                                    Toast.makeText(LoginActivity.this, "Login Failed!! Please check login credentials",
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                    finish();
+                                                                    startActivity(getIntent());
+                                                                }
+
+                                                            }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 } else {
                     mLoginProgress.hide();
                     Toast.makeText(LoginActivity.this, "Login Failed!! Please check login credentials",
@@ -72,5 +115,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    public String checkButton(View view) {
+        int radioId=usergroup.getCheckedRadioButtonId();
+        userstate=findViewById(radioId);
+        return ((String) userstate.getText());
     }
 }

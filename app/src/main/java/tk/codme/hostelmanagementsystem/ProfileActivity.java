@@ -28,10 +28,11 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mProfileName,mProfileStatus;
 
 
-    private DatabaseReference mUsersDatabase;
+    private DatabaseReference mUsersDatabase,mRootRef;
     private ProgressDialog mProgressDialog;
 
     private FirebaseUser mCurrent_user;
+    private  String designation;
 
 
     @Override
@@ -40,8 +41,12 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         final String user_id=getIntent().getStringExtra("user_id");
+        if(getIntent().hasExtra("designation"))
+            designation=getIntent().getStringExtra("designation");
 
-        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
+        mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
+
+        mUsersDatabase=mRootRef.child(designation).child(user_id);
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
         mProfileImage=(ImageView)findViewById(R.id.profile_image);

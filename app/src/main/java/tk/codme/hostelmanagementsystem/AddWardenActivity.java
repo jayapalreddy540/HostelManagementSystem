@@ -37,10 +37,12 @@ public class AddWardenActivity extends AppCompatActivity {
 private TextView headText;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mRef;
+    private DatabaseReference mRootRef,mRef;
     private FirebaseDatabase mDatabase;
 
     private ProgressDialog mRegProgress;
+
+    private String email1,password1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ private TextView headText;
 
         final String designation=getIntent().getStringExtra("designation");
         final String pid=getIntent().getStringExtra("pid");
+         email1=getIntent().getStringExtra("email");
+         password1=getIntent().getStringExtra("password");
 
         setContentView(R.layout.activity_addwarden);
 
@@ -96,7 +100,16 @@ private TextView headText;
 
                             FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
                             String uid=current_user.getUid();
-                            mRef=FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+                            mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
+
+
+                            if(user.equals("warden")){
+                                mRef=mRootRef.child("wardens").child(uid);
+                            }
+                            else if(user.equals("student")){
+                                mRef=mRootRef.child("students").child(uid);
+                            }
+
                             HashMap<String,String> userMap=new HashMap<>();
                             userMap.put("name",display_name);
                             userMap.put("designation",user);
@@ -108,10 +121,24 @@ private TextView headText;
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     mRegProgress.dismiss();
-                                    Intent mainIntent=new Intent(AddWardenActivity.this,MainActivity.class);
-                                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(mainIntent);
-                                    finish();
+                                    FirebaseAuth.getInstance().signOut();
+                                    mAuth.signInWithEmailAndPassword(email1,password1).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                Intent mainIntent = new Intent(AddWardenActivity.this, MainActivity.class);
+                                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                mainIntent.putExtra("email",email1);
+                                                mainIntent.putExtra("password",password1);
+                                                if(user.equals("warden"))
+                                                    mainIntent.putExtra("designation","admin");
+                                                else if(user.equals("student"))
+                                                    mainIntent.putExtra("designation","warden");
+                                                startActivity(mainIntent);
+                                                finish();
+                                            }
+                                        }
+                                    });
                                 }
                             });
 

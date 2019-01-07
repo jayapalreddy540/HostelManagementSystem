@@ -33,7 +33,7 @@ public class StudentListActivity extends AppCompatActivity {
 
         mAuth=FirebaseAuth.getInstance();
         String cid=mAuth.getCurrentUser().getUid();
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("caretaker").equalTo(cid);
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("students").orderByChild("caretaker").equalTo(cid);
 
 
         mUsersList = (RecyclerView) findViewById(R.id.wardens_list);
@@ -70,6 +70,7 @@ public class StudentListActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent profileIntent=new Intent(StudentListActivity.this,ProfileActivity.class);
                         profileIntent.putExtra("user_id",user_id);
+                        profileIntent.putExtra("designation","students");
                         startActivity(profileIntent);
                     }
                 });
