@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
 
     private ProgressDialog mSignoutProgress;
-    private Button mlogout,mWardens,mAddwarden;
+    private Button mlogout,mWardens,mAddwarden,mSend,mMaps;
     private TextView mStatus;
 
     private String designation="student";//default
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         mlogout=(Button)findViewById(R.id.btnLogout);
         mWardens=(Button)findViewById(R.id.btnWardens);
         mAddwarden=(Button)findViewById(R.id.btnAddwarden);
+        mSend=(Button)findViewById(R.id.btnMsg);
+        mMaps=(Button)findViewById(R.id.btnMap);
         mStatus=(TextView)findViewById(R.id.txtStatus);
 
         if(currentUser!=null) {
@@ -57,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                     String name = dataSnapshot.child("name").getValue().toString();
-                    mStatus.setText("you're " + name + " , " + designation);
+                     String name = dataSnapshot.child("name").toString();
+                    mStatus.setText("you're " + name + " as " + designation);
 
                     if (designation.equals("admin")) {
                         mWardens.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +132,20 @@ public class MainActivity extends AppCompatActivity {
                 sendToStart();
             }
         });
-
+        mSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent msgIntent=new Intent(MainActivity.this,MessageSending.class);
+                startActivity(msgIntent);
+            }
+        });
+        mMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent=new Intent(MainActivity.this,MapsActivity.class);
+                startActivity(mapIntent);
+            }
+        });
     }
 
     @Override
