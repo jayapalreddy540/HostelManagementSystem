@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FeedBackActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="345dp"
+        android:layout_height="46dp"
+        android:layout_above="@+id/name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="40dp"
+        android:text="Feedback"
+        android:textSize="10pt">
+    </TextView>
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/email"
+        android:layout_marginBottom="20dp"
+        android:hint="name"
+        android:inputType="textPersonName">
+    </EditText>
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/SpinnerFeedbackType"
+        android:layout_marginBottom="54dp"
+        android:hint="email"
+        android:inputType="textEmailAddress">
+    </EditText>
+
+    <Spinner
+        android:id="@+id/SpinnerFeedbackType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/FeedbackBody"
+        android:layout_marginBottom="29dp"
+        android:entries="@array/feedbacktypelist"
+        android:prompt="@string/feedback">
+    </Spinner>
+
+    <EditText
+        android:id="@+id/FeedbackBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/CheckBoxResponse"
+        android:layout_marginBottom="10dp"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        android:lines="5">
+    </EditText>
+
+    <CheckBox
+        android:id="@+id/CheckBoxResponse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ButtonSendFeedback"
+        android:layout_marginBottom="18dp"
+        android:text="feedbackresponse">
+    </CheckBox>
+
+    <Button
+        android:id="@+id/ButtonSendFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="19dp"
+        android:text="SUBMIT">
+    </Button>
+</RelativeLayout>

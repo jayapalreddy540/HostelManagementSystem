@@ -3,6 +3,8 @@ package tk.codme.hostelmanagementsystem;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
 
     private ProgressDialog mSignoutProgress;
-    private Button mlogout,mWardens,mAddwarden,mSend,mMaps;
+    private Button mWardens,mAddwarden,mSend,mMaps;
     private TextView mStatus;
 
     private String designation="student";//default
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
              designation=getIntent().getStringExtra("designation");
 
         mSignoutProgress=new ProgressDialog(this);
-        mlogout=(Button)findViewById(R.id.btnLogout);
         mWardens=(Button)findViewById(R.id.btnWardens);
         mAddwarden=(Button)findViewById(R.id.btnAddwarden);
         mSend=(Button)findViewById(R.id.btnMsg);
@@ -121,17 +122,6 @@ public class MainActivity extends AppCompatActivity {
             sendToStart();
         }
 
-        mlogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSignoutProgress.setTitle("Logout");
-                mSignoutProgress.setMessage("Logging out...");
-                mSignoutProgress.setCanceledOnTouchOutside(false);
-                mSignoutProgress.show();
-                FirebaseAuth.getInstance().signOut();
-                sendToStart();
-            }
-        });
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,4 +153,35 @@ public class MainActivity extends AppCompatActivity {
             startActivity(startIntent);
             finish();
         }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if(item.getItemId()==R.id.main_logout_btn){
+            mSignoutProgress.setTitle("Logout");
+            mSignoutProgress.setMessage("Logging out...");
+            mSignoutProgress.setCanceledOnTouchOutside(false);
+            mSignoutProgress.show();
+            FirebaseAuth.getInstance().signOut();
+            sendToStart();
+        }
+
+        if(item.getItemId()==R.id.main_settings_btn){
+            Intent settingsIntent=new Intent(MainActivity.this,SettingsActivity.class);
+            startActivity(settingsIntent);
+        }
+        if(item.getItemId()==R.id.main_feedback_btn){
+            Intent usersIntent=new Intent(MainActivity.this,FeedBackActivity.class);
+            startActivity(usersIntent);
+        }
+        return true;
+    }
 }

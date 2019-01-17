@@ -9,4 +9,10 @@
     <string name="create">CREATE</string>
     <string name="create_a_new_account1">CREATE A NEW ACCOUNT</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="feedbacktype1">food</string>
+    <string name="feedbacktype2">room</string>
+    <string name="feedbacktype3">security</string>
+    <string name="feedbacktype4">others</string>
+    <string name="feedback">feedbacktypelist</string>
 </resources>
