@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import androidx.annotation.NonNull;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -35,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private RadioGroup usergroup;
     private RadioButton userstate;
 
-    private String state="student";//default
+    private String designation;
     private FirebaseAuth mAuth;
 
     private ProgressDialog mLoginProgress;
@@ -57,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email=mLoginEmail.getEditText().getText().toString();
                 String password=mLoginPassword.getEditText().getText().toString();
-                state=checkButton(v);
+               designation=checkButton(v);
 
                 if(!TextUtils.isEmpty(email)||!TextUtils.isEmpty((password))){
                     mLoginProgress.setTitle("logging  In");
@@ -78,16 +81,16 @@ public class LoginActivity extends AppCompatActivity {
                     mAuth=FirebaseAuth.getInstance();
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     String currentUid=currentUser.getUid();
-                    DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(state + "s").child(currentUid);
+                    DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation + "s").child(currentUid);
                     mUserDatabase.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                 if(dataSnapshot.child("name").exists()){
+                                                                     designation=dataSnapshot.child("designation").getValue().toString();
                                                                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                                                                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                    mainIntent.putExtra("email",email);
-                                                                    mainIntent.putExtra("password",password);
-                                                                    mainIntent.putExtra("designation",state);
+                                                                    SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                                                                    sp.edit().putString("designation",designation).apply();
                                                                     startActivity(mainIntent);
                                                                     finish();
                                                                 }

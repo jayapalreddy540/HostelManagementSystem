@@ -59,6 +59,8 @@
         <activity android:name=".FeedBackActivity"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity android:name=".AddStudentActivity" />
+        <activity android:name=".SettingsActivity" />
     </application>
 
 </manifest>

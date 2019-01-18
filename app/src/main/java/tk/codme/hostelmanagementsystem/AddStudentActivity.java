@@ -27,14 +27,14 @@ import java.util.HashMap;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddWardenActivity extends AppCompatActivity {
+public class AddStudentActivity extends AppCompatActivity {
 
     private TextInputLayout mDisplayName;
     private TextInputLayout mEmail;
     private TextInputLayout mPassword;
-    private TextInputLayout mMobile;
+    private TextInputLayout mMobile,pMobile;
     private Button mCreateBtn;
-private TextView headText;
+    private TextView headText;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef,mRef;
@@ -42,7 +42,6 @@ private TextView headText;
 
     private ProgressDialog mRegProgress;
 
-    private String email1,password1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,7 @@ private TextView headText;
         final String designation=getIntent().getStringExtra("designation");
         final String pid=getIntent().getStringExtra("pid");
 
-        setContentView(R.layout.activity_addwarden);
+        setContentView(R.layout.activity_addstudent);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -61,10 +60,12 @@ private TextView headText;
         mEmail=(TextInputLayout)findViewById(R.id.reg_email);
         mPassword=(TextInputLayout)findViewById(R.id.reg_pass);
         mMobile=(TextInputLayout)findViewById(R.id.reg_mobile);
+        pMobile=(TextInputLayout)findViewById(R.id.reg_pmobile);
         mCreateBtn=(Button)findViewById(R.id.reg_create_btn);
         headText=(TextView)findViewById(R.id.headingtext);
 
-            headText.setText("CREATE WARDEN");
+            headText.setText("CREATE STUDENT");
+
         mRegProgress=new ProgressDialog(this);
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,19 +76,20 @@ private TextView headText;
                 String email = mEmail.getEditText().getText().toString();
                 String password = mPassword.getEditText().getText().toString();
                 String mobile=mMobile.getEditText().getText().toString();
-                if(!TextUtils.isEmpty(display_name)||!TextUtils.isEmpty(email)||!TextUtils.isEmpty(password)){
-                    mRegProgress.setTitle("Registering User");
+                String pmobile=pMobile.getEditText().getText().toString();
+                if(!TextUtils.isEmpty(display_name)||!TextUtils.isEmpty(email)||!TextUtils.isEmpty(password)||!TextUtils.isEmpty(mobile)||!TextUtils.isEmpty(pmobile)){
+                    mRegProgress.setTitle("Registering Student..");
                     mRegProgress.setMessage("Please wait..  we are creating your account");
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
-                    register_user(display_name,email,password,mobile,designation,pid);
+                    register_user(display_name,email,password,mobile,pmobile,designation,pid);
                 }
 
             }
         });
     }
 
-    private void  register_user(final String display_name, String email, String password,final String mMobile,final String user,final String pid){
+    private void  register_user(final String display_name, String email, String password,final String mobile,final String pmobile,final String user,final String pid){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -98,13 +100,13 @@ private TextView headText;
                             String uid=current_user.getUid();
                             mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
 
-                                mRef=mRootRef.child("wardens").child(uid);
-
+                                mRef=mRootRef.child("students").child(uid);
 
                             HashMap<String,String> userMap=new HashMap<>();
                             userMap.put("name",display_name);
-                            userMap.put("designation","warden");
-                            userMap.put("mobile",mMobile);
+                            userMap.put("designation","student");
+                            userMap.put("mobile",mobile);
+                            userMap.put("pmobile",pmobile);
                             userMap.put("caretaker",pid);
                             userMap.put("image","default");
                             userMap.put("thumb_image","default");
@@ -112,18 +114,17 @@ private TextView headText;
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     mRegProgress.dismiss();
-                                    Toast.makeText(AddWardenActivity.this,"Warden Created ..",Toast.LENGTH_LONG).show();
-                                                mRegProgress=new ProgressDialog(AddWardenActivity.this);
-                                                mRegProgress.setTitle("Important Messsage ");
-                                                mRegProgress.setMessage("You Should Re-login to continue.");
-                                                mRegProgress.setCanceledOnTouchOutside(false);
-                                                mRegProgress.show();
-                                                FirebaseAuth.getInstance().signOut();
-                                                Intent mainIntent=new Intent(AddWardenActivity.this,LoginActivity.class);
-                                                startActivity(mainIntent);
-                                                mRegProgress.hide();
-                                            }
-
+                                    Toast.makeText(AddStudentActivity.this,"Student Created ..",Toast.LENGTH_LONG).show();
+                                    mRegProgress=new ProgressDialog(AddStudentActivity.this);
+                                    mRegProgress.setTitle("Important Messsage ");
+                                    mRegProgress.setMessage("You Should Re-login to continue.");
+                                    mRegProgress.setCanceledOnTouchOutside(false);
+                                    mRegProgress.show();
+                                    FirebaseAuth.getInstance().signOut();
+                                    Intent mainIntent=new Intent(AddStudentActivity.this,LoginActivity.class);
+                                    startActivity(mainIntent);
+                                    mRegProgress.hide();
+                                }
                             });
 
                         }

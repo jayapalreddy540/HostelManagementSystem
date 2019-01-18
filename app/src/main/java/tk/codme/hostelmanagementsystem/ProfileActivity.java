@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView mProfileImage;
-    private TextView mProfileName,mProfileStatus;
+    private TextView mProfileName,mProfileMobile,mProfilePMobile;
 
 
     private DatabaseReference mUsersDatabase,mRootRef;
@@ -41,17 +43,21 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         final String user_id=getIntent().getStringExtra("user_id");
-        if(getIntent().hasExtra("designation"))
-            designation=getIntent().getStringExtra("designation");
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        designation=sp.getString("designation","");
 
         mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
 
-        mUsersDatabase=mRootRef.child(designation).child(user_id);
+        if(designation.equals("admin")) designation="warden";
+        else if(designation.equals("admin")) designation="student";
+        mUsersDatabase=mRootRef.child(designation+"s").child(user_id);
+        mUsersDatabase.keepSynced(true);
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
         mProfileImage=(ImageView)findViewById(R.id.profile_image);
         mProfileName=(TextView)findViewById(R.id.profile_displayName);
-        mProfileStatus=(TextView)findViewById(R.id.profile_status);
+        mProfileMobile=(TextView)findViewById(R.id.mobile);
+        mProfilePMobile=(TextView)findViewById(R.id.pmobile);
 
         mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setTitle("Loading User Data");
@@ -62,12 +68,19 @@ public class ProfileActivity extends AppCompatActivity {
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //String designation=dataSnapshot.child("designation").getValue().toString();
                 String display_name = dataSnapshot.child("name").getValue().toString();
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
 
-                mProfileName.setText(display_name);
-                mProfileStatus.setText(mobile);
+                   mProfileName.setText("Name   : "+display_name);
+                 mProfileMobile.setText("mobile : "+mobile);
+
+                if(designation.equals("student")) {
+                    String pmobile=dataSnapshot.child("pmobile").getValue().toString();
+                    mProfilePMobile.setText("Parent : " + pmobile);
+                }
+                else mProfilePMobile.setVisibility(View.INVISIBLE);
                 //Picasso.get().load(image).placeholder(R.drawable.default_img).into(mProfileImage);
                 mProgressDialog.dismiss();
 

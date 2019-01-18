@@ -1,7 +1,9 @@
 package tk.codme.hostelmanagementsystem;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mWardens,mAddwarden,mSend,mMaps;
     private TextView mStatus;
 
-    private String designation="student";//default
+    private String designation;
     private String currentUid;
 
     @Override
@@ -41,10 +43,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
 
-        final String email=getIntent().getStringExtra("email");
-        final String password=getIntent().getStringExtra("password");
-        if(getIntent().hasExtra("designation"))
-             designation=getIntent().getStringExtra("designation");
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        designation=sp.getString("designation","");
 
         mSignoutProgress=new ProgressDialog(this);
         mWardens=(Button)findViewById(R.id.btnWardens);
@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                     String name = dataSnapshot.child("name").toString();
+                     String name = dataSnapshot.child("name").getValue().toString();
+                     designation=dataSnapshot.child("designation").getValue().toString();
                     mStatus.setText("you're " + name + " as " + designation);
 
                     if (designation.equals("admin")) {
@@ -77,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                                 Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
                                 awIntent.putExtra("designation", "warden");
                                 awIntent.putExtra("pid",currentUid);
-                                awIntent.putExtra("email",email);
-                                awIntent.putExtra("password",password);
                                 startActivity(awIntent);
                             }
                         });
@@ -95,11 +94,9 @@ public class MainActivity extends AppCompatActivity {
                         mAddwarden.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent aw1Intent = new Intent(MainActivity.this, AddWardenActivity.class);
+                                Intent aw1Intent = new Intent(MainActivity.this, AddStudentActivity.class);
                                 aw1Intent.putExtra("designation", "student");
                                 aw1Intent.putExtra("pid",currentUid);
-                                aw1Intent.putExtra("email",email);
-                                aw1Intent.putExtra("password",password);
                                 startActivity(aw1Intent);
 
 

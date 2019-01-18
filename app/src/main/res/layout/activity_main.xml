@@ -9,34 +9,33 @@
 
     <Button
         android:id="@+id/btnWardens"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnAddwarden"
-        android:layout_marginBottom="83dp"
+        android:layout_marginBottom="33dp"
         android:text="Wardens List" />
 
     <Button
         android:id="@+id/btnAddwarden"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnMsg"
-        android:layout_marginBottom="94dp"
+        android:layout_marginBottom="34dp"
         android:text="ADD Warden" />
 
 
     <TextView
         android:id="@+id/txtStatus"
-        android:layout_width="165dp"
-        android:layout_height="28dp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
         android:layout_above="@+id/btnWardens"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="51dp"
-        android:layout_marginBottom="130dp"
-        android:text="status" />
+        android:layout_marginBottom="49dp"
+        android:text="status"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/btnMsg"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:layout_above="@+id/btnMap"
@@ -45,9 +44,9 @@
 
     <Button
         android:id="@+id/btnMap"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="106dp"
+        android:layout_marginBottom="61dp"
         android:text="Currrent Location" />
 </RelativeLayout>

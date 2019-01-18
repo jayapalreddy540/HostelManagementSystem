@@ -31,8 +31,11 @@ public class StudentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wardenlist);
 
+         String cid;
         mAuth=FirebaseAuth.getInstance();
-        String cid=mAuth.getCurrentUser().getUid();
+        if(getIntent().hasExtra("user_id"))
+         cid=getIntent().getStringExtra("user_id");
+        else cid=mAuth.getCurrentUser().getUid();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("students").orderByChild("caretaker").equalTo(cid);
 
 
@@ -45,21 +48,21 @@ public class StudentListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseRecyclerOptions<Wardens> options = new FirebaseRecyclerOptions.Builder<Wardens>()
-                .setQuery(mUsersDatabase, Wardens.class)
+        FirebaseRecyclerOptions<Students> options = new FirebaseRecyclerOptions.Builder<Students>()
+                .setQuery(mUsersDatabase, Students.class)
                 .build();
 
 
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Wardens, WardensViewHolder>(options) {
+        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Students, StudentsViewHolder>(options) {
             @NonNull
             @Override
-            public WardensViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wardens_single_layout, parent, false);
-                return new WardensViewHolder(view);
+            public StudentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.student_single_layout, parent, false);
+                return new StudentsViewHolder(view);
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull WardensViewHolder usersViewHolder, int i, @NonNull Wardens users) {
+            protected void onBindViewHolder(@NonNull StudentsViewHolder usersViewHolder, int i, @NonNull Students users) {
 
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setMobile(users.getMobile());

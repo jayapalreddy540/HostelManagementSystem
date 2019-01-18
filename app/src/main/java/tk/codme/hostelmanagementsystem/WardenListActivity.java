@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -59,7 +61,7 @@ public class WardenListActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull WardensViewHolder usersViewHolder, int i, @NonNull Wardens users) {
+            protected void onBindViewHolder(@NonNull final WardensViewHolder usersViewHolder, int i, @NonNull Wardens users) {
 
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setMobile(users.getMobile());
@@ -68,10 +70,34 @@ public class WardenListActivity extends AppCompatActivity {
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent profileIntent=new Intent(WardenListActivity.this,ProfileActivity.class);
-                        profileIntent.putExtra("user_id",user_id);
-                        profileIntent.putExtra("designation","wardens");
-                        startActivity(profileIntent);
+
+                        usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CharSequence options[] = new CharSequence[]{"Open Profile", "Students list"};
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(WardenListActivity.this);
+                                builder.setTitle("Select Options");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //click event for each item
+                                        if (which == 0) {
+                                            Intent profileIntent=new Intent(WardenListActivity.this,ProfileActivity.class);
+                                            profileIntent.putExtra("user_id",user_id);
+                                            startActivity(profileIntent);
+                                        }
+                                        if (which == 1) {
+                                            Intent stdIntent = new Intent(WardenListActivity.this, StudentListActivity.class);
+                                            stdIntent.putExtra("user_id", user_id);
+                                            startActivity(stdIntent);
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+
+
                     }
                 });
             }
