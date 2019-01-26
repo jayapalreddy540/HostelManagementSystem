@@ -65,6 +65,7 @@ public class WardenListActivity extends AppCompatActivity {
 
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setMobile(users.getMobile());
+                usersViewHolder.setImage(users.getImage());
 
                 final String user_id=getRef(i).getKey();
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +85,7 @@ public class WardenListActivity extends AppCompatActivity {
                                         if (which == 0) {
                                             Intent profileIntent=new Intent(WardenListActivity.this,ProfileActivity.class);
                                             profileIntent.putExtra("user_id",user_id);
+                                            profileIntent.putExtra("designation","wardens");
                                             startActivity(profileIntent);
                                         }
                                         if (which == 1) {

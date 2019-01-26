@@ -3,6 +3,7 @@ package tk.codme.hostelmanagementsystem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,12 +22,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private ImageView mProfileImage;
+    private CircleImageView mProfileImage;
     private TextView mProfileName,mProfileMobile,mProfilePMobile;
 
 
@@ -43,18 +46,14 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         final String user_id=getIntent().getStringExtra("user_id");
-        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-        designation=sp.getString("designation","");
+        final String tempDesignation=getIntent().getStringExtra("designation");
 
         mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
-
-        if(designation.equals("admin")) designation="warden";
-        else if(designation.equals("admin")) designation="student";
-        mUsersDatabase=mRootRef.child(designation+"s").child(user_id);
+        mUsersDatabase=mRootRef.child(tempDesignation).child(user_id);
         mUsersDatabase.keepSynced(true);
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
-        mProfileImage=(ImageView)findViewById(R.id.profile_image);
+        mProfileImage=(CircleImageView)findViewById(R.id.profile_image);
         mProfileName=(TextView)findViewById(R.id.profile_displayName);
         mProfileMobile=(TextView)findViewById(R.id.mobile);
         mProfilePMobile=(TextView)findViewById(R.id.pmobile);
@@ -68,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //String designation=dataSnapshot.child("designation").getValue().toString();
+                String designation=dataSnapshot.child("designation").getValue().toString();
                 String display_name = dataSnapshot.child("name").getValue().toString();
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
@@ -81,7 +80,21 @@ public class ProfileActivity extends AppCompatActivity {
                     mProfilePMobile.setText("Parent : " + pmobile);
                 }
                 else mProfilePMobile.setVisibility(View.INVISIBLE);
-                //Picasso.get().load(image).placeholder(R.drawable.default_img).into(mProfileImage);
+
+                if(!image.equals("default")){
+                    Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(mProfileImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Toast.makeText(ProfileActivity.this,"cant load image",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
                 mProgressDialog.dismiss();
 
             }

@@ -9,7 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,12 +27,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+   // GridView simpleGrid;
+    int logos[]={R.drawable.default_img,R.drawable.hms,R.drawable.common_full_open_on_phone,R.drawable.default_img,R.drawable.hms};
+
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference mUserDatabase;
 
     private ProgressDialog mSignoutProgress;
-    private Button mWardens,mAddwarden,mSend,mMaps;
+  //  private Button mWardens,mAddwarden,mSend,mMaps;
     private TextView mStatus;
 
     private String designation;
@@ -40,18 +46,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        GridView gridview = (GridView) findViewById(R.id.gridview);
+
+        ImageAdapter imageAdapter=new ImageAdapter(getApplicationContext(),logos);
+        gridview.setAdapter(imageAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                selectActivity(position);
+            }
+        });
+
+
         mAuth=FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
 
         SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
         designation=sp.getString("designation","");
 
-        mSignoutProgress=new ProgressDialog(this);
-        mWardens=(Button)findViewById(R.id.btnWardens);
-        mAddwarden=(Button)findViewById(R.id.btnAddwarden);
-        mSend=(Button)findViewById(R.id.btnMsg);
-        mMaps=(Button)findViewById(R.id.btnMap);
-        mStatus=(TextView)findViewById(R.id.txtStatus);
+        mSignoutProgress=new ProgressDialog(MainActivity.this);
 
         if(currentUser!=null) {
             currentUid = currentUser.getUid();
@@ -62,50 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                      String name = dataSnapshot.child("name").getValue().toString();
                      designation=dataSnapshot.child("designation").getValue().toString();
-                    mStatus.setText("you're " + name + " as " + designation);
-
-                    if (designation.equals("admin")) {
-                        mWardens.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent wlIntent = new Intent(MainActivity.this, WardenListActivity.class);
-                                startActivity(wlIntent);
-                            }
-                        });
-                        mAddwarden.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
-                                awIntent.putExtra("designation", "warden");
-                                awIntent.putExtra("pid",currentUid);
-                                startActivity(awIntent);
-                            }
-                        });
-                    } else if (designation.equals("warden")) {
-                        mWardens.setText("Students List");
-                        mWardens.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent wl1Intent = new Intent(MainActivity.this, StudentListActivity.class);
-                                startActivity(wl1Intent);
-                            }
-                        });
-                        mAddwarden.setText("Add Student");
-                        mAddwarden.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent aw1Intent = new Intent(MainActivity.this, AddStudentActivity.class);
-                                aw1Intent.putExtra("designation", "student");
-                                aw1Intent.putExtra("pid",currentUid);
-                                startActivity(aw1Intent);
-
-
-                            }
-                        });
-                    } else if (designation.equals("student")) {
-                        mWardens.setVisibility(View.INVISIBLE);
-                        mAddwarden.setVisibility(View.INVISIBLE);
-                    }
+                   // mStatus.setText("you're " + name + " as " + designation);
                 }
 
                 @Override
@@ -118,21 +88,50 @@ public class MainActivity extends AppCompatActivity {
         else{
             sendToStart();
         }
+    }
 
-        mSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void selectActivity(int position) {
+
+        switch(position)
+        {
+            case 0: if(designation.equals("admin")){
+                     Intent wlIntent = new Intent(MainActivity.this, WardenListActivity.class);
+                        startActivity(wlIntent);
+                     }
+                     else if(designation.equals("warden")){
+                         Intent wl1Intent = new Intent(MainActivity.this, StudentListActivity.class);
+                         startActivity(wl1Intent);
+                     }
+                     break;
+
+            case 1:
+                if(designation.equals("admin")){
+                    Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
+                    awIntent.putExtra("designation", "warden");
+                    awIntent.putExtra("pid",currentUid);
+                    startActivity(awIntent);
+                }
+                else if(designation.equals("warden")){
+                    Intent aw1Intent = new Intent(MainActivity.this, AddStudentActivity.class);
+                    aw1Intent.putExtra("designation", "student");
+                    aw1Intent.putExtra("pid",currentUid);
+                    startActivity(aw1Intent);
+                }
+                break;
+
+            case 2:
                 Intent msgIntent=new Intent(MainActivity.this,MessageSending.class);
                 startActivity(msgIntent);
-            }
-        });
-        mMaps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case 3:
                 Intent mapIntent=new Intent(MainActivity.this,MapsActivity.class);
                 startActivity(mapIntent);
-            }
-        });
+                break;
+            case 4:
+                Intent timeIntent=new Intent(MainActivity.this,TimerActivity.class);
+                startActivity(timeIntent);
+                break;
+        }
     }
 
     @Override

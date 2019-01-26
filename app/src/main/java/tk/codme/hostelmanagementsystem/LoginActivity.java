@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         mLogin_btn=(Button)findViewById(R.id.login_btn);
         usergroup=(RadioGroup)findViewById(R.id.usergroup);
 
-        mLoginProgress=new ProgressDialog(this);
+        mLoginProgress=new ProgressDialog(LoginActivity.this);
         mLogin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

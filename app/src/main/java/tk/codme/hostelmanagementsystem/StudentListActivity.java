@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -19,6 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 public class StudentListActivity extends AppCompatActivity {
 
@@ -66,6 +70,7 @@ public class StudentListActivity extends AppCompatActivity {
 
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setMobile(users.getMobile());
+                usersViewHolder.setImage(users.getImage());
 
                 final String user_id=getRef(i).getKey();
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
