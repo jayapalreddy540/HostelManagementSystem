@@ -119,9 +119,10 @@ private TextView headText;
                                                 mRegProgress.setCanceledOnTouchOutside(false);
                                                 mRegProgress.show();
                                                 FirebaseAuth.getInstance().signOut();
+                                                mRegProgress.hide();
                                                 Intent mainIntent=new Intent(AddWardenActivity.this,LoginActivity.class);
                                                 startActivity(mainIntent);
-                                                mRegProgress.hide();
+
                                             }
 
                             });

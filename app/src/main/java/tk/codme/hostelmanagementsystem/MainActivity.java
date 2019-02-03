@@ -28,7 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
    // GridView simpleGrid;
-    int logos[]={R.drawable.default_img,R.drawable.hms,R.drawable.common_full_open_on_phone,R.drawable.default_img,R.drawable.hms};
+    int logos[]={R.drawable.studentlist,R.drawable.addstudent,R.drawable.location,R.drawable.sms};
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -120,14 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                Intent msgIntent=new Intent(MainActivity.this,MessageSending.class);
-                startActivity(msgIntent);
-                break;
-            case 3:
                 Intent mapIntent=new Intent(MainActivity.this,MapsActivity.class);
                 startActivity(mapIntent);
                 break;
-            case 4:
+            case 3:
                 Intent timeIntent=new Intent(MainActivity.this,TimerActivity.class);
                 startActivity(timeIntent);
                 break;

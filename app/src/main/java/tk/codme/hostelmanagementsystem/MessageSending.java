@@ -2,6 +2,7 @@ package tk.codme.hostelmanagementsystem;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -32,6 +33,13 @@ public class MessageSending extends Activity {
         txtphoneNo = (EditText) findViewById(R.id.editText);
         txtMessage = (EditText) findViewById(R.id.editText2);
 
+        Intent intent=getIntent();
+        if(intent.hasExtra("mobile")) {
+
+            phoneNo = getIntent().getStringExtra("mobile");
+            txtphoneNo.setVisibility(View.INVISIBLE);
+        }
+
         sendBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 sendSMSMessage();
@@ -40,7 +48,6 @@ public class MessageSending extends Activity {
     }
 
     protected void sendSMSMessage() {
-        phoneNo = txtphoneNo.getText().toString();
         message = txtMessage.getText().toString();
 
         if (ContextCompat.checkSelfPermission(this,
@@ -60,8 +67,11 @@ public class MessageSending extends Activity {
             smsManager.sendTextMessage(phoneNo, null, message, null, null);
             Toast.makeText(getApplicationContext(), "SMS sent.",
                     Toast.LENGTH_LONG).show();
+            finish();
+
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -71,8 +81,8 @@ public class MessageSending extends Activity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(phoneNo, null, message, null, null);
-                    Toast.makeText(getApplicationContext(), "SMS sent.",
-                            Toast.LENGTH_LONG).show();
+                   Toast.makeText(getApplicationContext(), "SMS sent.",Toast.LENGTH_LONG).show();
+                   finish();
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "SMS sending failed, please try again.", Toast.LENGTH_LONG).show();

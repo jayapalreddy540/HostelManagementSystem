@@ -5,8 +5,10 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -24,6 +26,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -34,6 +43,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker marker;
     LocationManager locationManager;
 
+    private String designation;
+    private DatabaseReference mRef;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +55,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+         designation = sp.getString("designation", "");
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mo = new MarkerOptions().position(new LatLng(0, 0)).title("current location");
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
@@ -49,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else requestLocation();
         if (!isLocationEnabled())
             showAlert(1);
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -131,6 +149,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         marker.setPosition(myCoordinates);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
+
+        FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
+        String uid=current_user.getUid();
+        mRef= FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s").child(uid);
+       mRef.child("lat").setValue(location.getLatitude());
+       mRef.child("long").setValue(location.getLongitude());
+       mRef.child("lastloctime").setValue(ServerValue.TIMESTAMP);
     }
 
     @Override
