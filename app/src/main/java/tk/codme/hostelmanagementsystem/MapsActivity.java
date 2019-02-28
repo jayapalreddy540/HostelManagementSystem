@@ -44,6 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager locationManager;
 
     private String designation;
+    private Double latitude,longitude;
     private DatabaseReference mRef;
 
 
@@ -58,9 +59,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
          designation = sp.getString("designation", "");
+         latitude= Double.valueOf(sp.getString("latitude",""));
+         longitude= Double.valueOf(sp.getString("longitude",""));
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mo = new MarkerOptions().position(new LatLng(0, 0)).title("current location");
+        mo = new MarkerOptions().position(new LatLng(latitude, longitude)).title("current location");
+        try {
+            marker = mMap.addMarker(mo);
+            marker.setPosition(new LatLng(latitude, longitude));
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+        }
+        catch(Exception e){}
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
             requestPermissions(PERMISSIONS, PERMISSION_ALL);
         } else requestLocation();
@@ -150,12 +160,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker.setPosition(myCoordinates);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
 
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        sp.edit().putString("designation",designation).apply();
+        sp.edit().putString("latitude", String.valueOf(latitude)).apply();
+        sp.edit().putString("longitude", String.valueOf(longitude)).apply();
+        sp.edit().putString("lastloctime", String.valueOf(ServerValue.TIMESTAMP)).apply();
+
         FirebaseUser current_user= FirebaseAuth.getInstance().getCurrentUser();
         String uid=current_user.getUid();
         mRef= FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s").child(uid);
        mRef.child("lat").setValue(location.getLatitude());
        mRef.child("long").setValue(location.getLongitude());
        mRef.child("lastloctime").setValue(ServerValue.TIMESTAMP);
+
     }
 
     @Override

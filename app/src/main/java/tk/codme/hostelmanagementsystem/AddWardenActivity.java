@@ -95,7 +95,7 @@ private TextView headText;
                         if (task.isSuccessful()) {
 
                             FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
-                            String uid=current_user.getUid();
+                            final String uid=current_user.getUid();
                             mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
 
                                 mRef=mRootRef.child("wardens").child(uid);
@@ -112,6 +112,9 @@ private TextView headText;
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     mRegProgress.dismiss();
+                                    mRef.child("lat").setValue(1.2);
+                                    mRef.child("long").setValue(1.2);
+                                    mRef.child("lastloctime").setValue(0);
                                     Toast.makeText(AddWardenActivity.this,"Warden Created ..",Toast.LENGTH_LONG).show();
                                                 mRegProgress=new ProgressDialog(AddWardenActivity.this);
                                                 mRegProgress.setTitle("Important Messsage ");
@@ -126,7 +129,6 @@ private TextView headText;
                                             }
 
                             });
-
                         }
                         else {
                             mRegProgress.hide();

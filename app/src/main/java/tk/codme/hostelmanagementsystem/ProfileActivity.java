@@ -5,12 +5,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +31,19 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 
 public class ProfileActivity extends AppCompatActivity {
 
     private CircleImageView mProfileImage;
-    private TextView mProfileName,mProfileMobile,mProfilePMobile;
+    private TextView mProfileName,mProfileMobile,mProfilePMobile,mAddress;
+    private ImageButton location;
+
+    private Double latitude,longitude;
 
 
     private DatabaseReference mUsersDatabase,mRootRef;
@@ -38,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseUser mCurrent_user;
     private  String designation;
+    private String lastloctime;
 
 
     @Override
@@ -57,6 +71,8 @@ public class ProfileActivity extends AppCompatActivity {
         mProfileName=(TextView)findViewById(R.id.profile_displayName);
         mProfileMobile=(TextView)findViewById(R.id.mobile);
         mProfilePMobile=(TextView)findViewById(R.id.pmobile);
+        mAddress=(TextView)findViewById(R.id.presentloc);
+        location=(ImageButton)findViewById(R.id.loc);
 
         mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setTitle("Loading User Data");
@@ -71,16 +87,39 @@ public class ProfileActivity extends AppCompatActivity {
                 String display_name = dataSnapshot.child("name").getValue().toString();
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
+                 latitude= (Double) dataSnapshot.child("lat").getValue();
+                 longitude= (Double) dataSnapshot.child("long").getValue();
+                 lastloctime=getTimeDate((Long)dataSnapshot.child("lastloctime").getValue());
+
+               /* GetTimeAgo getTimeAgo=new GetTimeAgo();
+                long lastTime=(Long)(dataSnapshot.child("online").getValue());
+                String lastSeenTime=getTimeAgo.getTimeAgo(lastTime,getApplicationContext());*/
 
                    mProfileName.setText("Name   : "+display_name);
                  mProfileMobile.setText("mobile : "+mobile);
+                Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(mProfileImage);
 
                 if(designation.equals("student")) {
                     String pmobile=dataSnapshot.child("pmobile").getValue().toString();
                     mProfilePMobile.setText("Parent : " + pmobile);
                 }
                 else mProfilePMobile.setVisibility(View.INVISIBLE);
+             try {
+                 Geocoder geocoder;
+                 List<Address> addresses;
+                 geocoder = new Geocoder(ProfileActivity.this, Locale.getDefault());
 
+                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                 String city = addresses.get(0).getLocality();
+                 String state = addresses.get(0).getAdminArea();
+                 String country = addresses.get(0).getCountryName();
+                 String postalCode = addresses.get(0).getPostalCode();
+                 String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                 mAddress.setText("Last Loc : \n"+country+" "+state+" "+city+" "+" "+address+" "+postalCode+" "+" "+knownName+"\n\n"+"at :  "+lastloctime);
+             }
+             catch(Exception e){}
                 if(!image.equals("default")){
                     Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(mProfileImage, new Callback() {
                         @Override
@@ -104,6 +143,21 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent=new Intent(ProfileActivity.this,MapsActivity.class);
+                startActivity(mapIntent);
             }
+        });
 
+    }
+
+    public static String getTimeDate(long timedate){
+        DateFormat dateFormat=DateFormat.getDateTimeInstance();
+        Date netDate=new Date(timedate);
+        return dateFormat.format(netDate);
+    }
 }
+
+

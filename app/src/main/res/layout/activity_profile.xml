@@ -1,76 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".ProfileActivity">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="0dp"
-        app:srcCompat="@drawable/default_img" />
-
+        android:layout_height="match_parent"
+        >
+<de.hdodenhof.circleimageview.CircleImageView
+    android:id="@+id/profile_image"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="10dp"
+    android:src="@drawable/default_img" />
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/card_disp"
+    android:layout_below="@+id/profile_image">
     <TextView
         android:id="@+id/profile_displayName"
-        android:layout_width="315dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profile_image"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         android:text="Display Name"
-        android:textSize="28sp" />
+        android:textSize="20dp" />
+</androidx.cardview.widget.CardView>
 
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/card_mob"
+    android:layout_below="@+id/card_disp">
     <TextView
         android:id="@+id/mobile"
-        android:layout_width="307dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_displayName"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         android:text="mobile"
-        android:textSize="28sp" />
+        android:textSize="20dp" />
+</androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/pmobile"
-        android:layout_width="307dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_pmob"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mobile"
+        android:layout_below="@+id/card_mob">
+
+        <TextView
+            android:id="@+id/pmobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:text="Pmobile"
+            android:textSize="20dp" />
+    </androidx.cardview.widget.CardView>
+
+
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/card_loc"
+    android:layout_below="@+id/card_pmob">
+    <TextView
+        android:id="@+id/presentloc"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:text="Present Loc" />
+
+</androidx.cardview.widget.CardView>
+
+
+    <ImageButton
+        android:id="@+id/loc"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+android:scaleType="fitXY"
+        android:layout_below="@+id/card_pmob"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="36dp"
-        android:text="Parent mobile"
-        android:textSize="28sp" />
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="-4dp"
+        android:layout_marginEnd="27dp"
+        android:layout_toEndOf="@+id/card_loc"
+        android:src="@drawable/location" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/users_count"
-        android:layout_width="311dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/pmobile"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="76dp"
-        android:layout_marginBottom="243dp"
-        android:text="no of users"
-        android:textSize="28sp" />
+</ScrollView>
 
-
-</RelativeLayout>

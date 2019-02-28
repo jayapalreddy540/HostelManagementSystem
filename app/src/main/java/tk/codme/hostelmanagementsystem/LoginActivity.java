@@ -5,13 +5,19 @@ import android.app.ProgressDialog;
 import androidx.annotation.NonNull;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -37,11 +43,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button mLogin_btn;
     private RadioGroup usergroup;
     private RadioButton userstate;
+    private EditText pass,email;
 
     private String designation;
     private FirebaseAuth mAuth;
 
     private ProgressDialog mLoginProgress;
+
+    private AppCompatCheckBox checkbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +58,28 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth=FirebaseAuth.getInstance();
+
+
         mLoginEmail=(TextInputLayout)findViewById(R.id.login_Email);
         mLoginPassword=(TextInputLayout)findViewById(R.id.login_Pass);
+        email=(EditText)findViewById(R.id.login_email);
+        pass=(EditText)findViewById(R.id.login_pass);
         mLogin_btn=(Button)findViewById(R.id.login_btn);
         usergroup=(RadioGroup)findViewById(R.id.usergroup);
-
+        checkbox = (AppCompatCheckBox) findViewById(R.id.checkbox);
+        pass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                                    if (isChecked) {
+                                                        // show password
+                                                        pass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                                                    } else {
+                                                        // hide password
+                                                        pass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                                                    }
+                                                }
+                                            });
         mLoginProgress=new ProgressDialog(LoginActivity.this);
         mLogin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    mLoginProgress.dismiss();
                     mAuth=FirebaseAuth.getInstance();
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     String currentUid=currentUser.getUid();
@@ -91,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                     SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
                                                                     sp.edit().putString("designation",designation).apply();
+                                                                    mLoginProgress.dismiss();
                                                                     startActivity(mainIntent);
                                                                     finish();
                                                                 }

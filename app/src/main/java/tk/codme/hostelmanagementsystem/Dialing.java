@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -30,11 +31,12 @@ public class Dialing extends AppCompatActivity {
         if (intent.hasExtra("mobile")) {
 
             mobile = getIntent().getStringExtra("mobile");
+            button.setText("call : "+ mobile);
         }
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
+                Log.d("call button clicked","request to call");
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {

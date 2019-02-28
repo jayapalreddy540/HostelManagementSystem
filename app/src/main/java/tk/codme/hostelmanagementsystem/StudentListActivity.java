@@ -20,15 +20,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+
+
 
 public class StudentListActivity extends AppCompatActivity {
 
     private RecyclerView mUsersList;
     private Query mUsersDatabase;
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class StudentListActivity extends AppCompatActivity {
         mUsersList = (RecyclerView) findViewById(R.id.wardens_list);
         mUsersList.setHasFixedSize(true);
         mUsersList.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -71,6 +72,7 @@ public class StudentListActivity extends AppCompatActivity {
                 usersViewHolder.setName(users.getName());
                 usersViewHolder.setMobile(users.getMobile());
                 usersViewHolder.setImage(users.getImage());
+
 
                 final String user_id=getRef(i).getKey();
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
