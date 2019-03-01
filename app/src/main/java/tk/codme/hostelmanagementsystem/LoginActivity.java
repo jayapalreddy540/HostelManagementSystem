@@ -3,6 +3,8 @@ package tk.codme.hostelmanagementsystem;
 
 import android.app.ProgressDialog;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatCheckBox;
@@ -34,6 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -47,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String designation;
     private FirebaseAuth mAuth;
+    private DatabaseReference mUserDatabase;
 
     private ProgressDialog mLoginProgress;
 
@@ -98,6 +103,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public String checkButton(View view) {
+        int radioId=usergroup.getCheckedRadioButtonId();
+        userstate=findViewById(radioId);
+        return ((String) userstate.getText());
+    }
+
     private void loginUser(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -106,50 +117,73 @@ public class LoginActivity extends AppCompatActivity {
                     mAuth=FirebaseAuth.getInstance();
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     String currentUid=currentUser.getUid();
-                    DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation + "s").child(currentUid);
-                    mUserDatabase.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                if(dataSnapshot.child("name").exists()){
-                                                                     designation=dataSnapshot.child("designation").getValue().toString();
-                                                                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                                                                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                    SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-                                                                    sp.edit().putString("designation",designation).apply();
-                                                                    mLoginProgress.dismiss();
-                                                                    startActivity(mainIntent);
-                                                                    finish();
-                                                                }
-                                                                else{
-                                                                    FirebaseAuth.getInstance().signOut();
-                                                                    Toast.makeText(LoginActivity.this, "Login Failed!! Please check login credentials",
-                                                                            Toast.LENGTH_SHORT).show();
-                                                                    finish();
-                                                                    startActivity(getIntent());
-                                                                }
 
-                                                            }
 
+                    final String current_user_id=mAuth.getCurrentUser().getUid();
+                     mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation + "s").child(currentUid);
+
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                         @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                return;
+                            }
+                            String token = task.getResult().getToken();
+
+
+                            mUserDatabase.child("device_token").setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                    mUserDatabase.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.child("name").exists()){
+                                                designation=dataSnapshot.child("designation").getValue().toString();
+                                                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                                                sp.edit().putString("designation",designation).apply();
+                                                mLoginProgress.dismiss();
+                                                startActivity(mainIntent);
+                                                finish();
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    startActivity(mainIntent);
+                                    finish();
+                                }
+                            });
 
                         }
                     });
-
-
-                } else {
-                    mLoginProgress.hide();
+                }
+                else{
+                    FirebaseAuth.getInstance().signOut();
                     Toast.makeText(LoginActivity.this, "Login Failed!! Please check login credentials",
                             Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(getIntent());
                 }
-            }
-        });
-    }
 
 
-    public String checkButton(View view) {
-        int radioId=usergroup.getCheckedRadioButtonId();
-        userstate=findViewById(radioId);
-        return ((String) userstate.getText());
+
+
+                }
+
+
+
+});
     }
 }
+

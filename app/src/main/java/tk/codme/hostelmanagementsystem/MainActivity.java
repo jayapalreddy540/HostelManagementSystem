@@ -1,8 +1,10 @@
 package tk.codme.hostelmanagementsystem;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -19,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -29,13 +32,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static tk.codme.hostelmanagementsystem.NetworkStateChangeReceiver.IS_NETWORK_AVAILABLE;
 
 
 public class MainActivity extends AppCompatActivity
@@ -51,9 +57,9 @@ public class MainActivity extends AppCompatActivity
 
     GridLayout mainGrid;
 
-    private String designation;
+    private String designation,lastloctime;
     private String currentUid,name,image;
-    private CircleImageView mProfileImage;
+    private Double latitude,longitude;
 
 
     @Override
@@ -62,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         //mainGrid = (GridLayout) findViewById(R.id.mainGrid);
 
@@ -92,16 +97,44 @@ public class MainActivity extends AppCompatActivity
         mAuth= FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
 
+
         SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
         designation=sp.getString("designation","");
         name=sp.getString("name","");
-        image=sp.getString("image","");
+        image=sp.getString("image","default");
+
+        IntentFilter intentFilter = new IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false);
+                String networkStatus = isNetworkAvailable ? "connected" : "disconnected";
+                Toast.makeText(MainActivity.this,"networkStatus:"+networkStatus,Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.drawer_layout), "Network Status: " + networkStatus, Snackbar.LENGTH_LONG).show();
+            }
+        }, intentFilter);
 
         TextView navUsername = (TextView) headerView.findViewById(R.id.textView);
         navUsername.setText(name);
 
-        CircleImageView imageview=(CircleImageView)headerView.findViewById(R.id.imageView);
+        final CircleImageView imageview=(CircleImageView)headerView.findViewById(R.id.imageView);
+        if (!image.equals("default")) {
+            //Picasso.get().load(image).placeholder(R.drawable.default_img).into(mDisplayImage);
+            Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(imageview, new Callback() {
+                @Override
+                public void onSuccess() {
 
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Picasso.get().load(image).placeholder(R.drawable.default_img).into(imageview);
+                }
+            });
+        }
+
+       // CircleImageView imageview=(CircleImageView)headerView.findViewById(R.id.imageView);
+        //Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(imageview);
 
         mSignoutProgress=new ProgressDialog(MainActivity.this);
 
@@ -115,19 +148,18 @@ public class MainActivity extends AppCompatActivity
                      name = dataSnapshot.child("name").getValue().toString();
                     designation=dataSnapshot.child("designation").getValue().toString();
                      image=dataSnapshot.child("image").getValue().toString();
-                    Double latitude = (Double) dataSnapshot.child("lat").getValue();
-                    Double longitude = (Double) dataSnapshot.child("long").getValue();
-                    String lastloctime = dataSnapshot.child("lastloctime").getValue().toString();
+                     latitude = (Double) dataSnapshot.child("lat").getValue();
+                     longitude = (Double) dataSnapshot.child("long").getValue();
+                    lastloctime = dataSnapshot.child("lastloctime").getValue().toString();
                     // mStatus.setText("you're " + name + " as " + designation);
 
-                    SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-                    sp.edit().putString("designation",designation).apply();
-                    sp.edit().putString("name",name).apply();
-                    sp.edit().putString("image",image).apply();
-                    sp.edit().putString("latitude", String.valueOf(latitude)).apply();
-                    sp.edit().putString("longitude", String.valueOf(longitude)).apply();
-                    sp.edit().putString("lastloctime", String.valueOf(lastloctime)).apply();
-
+                    SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                    sp1.edit().putString("designation",designation).apply();
+                    sp1.edit().putString("name",name).apply();
+                    sp1.edit().putString("image",image).apply();
+                    sp1.edit().putString("latitude", String.valueOf(latitude)).apply();
+                    sp1.edit().putString("longitude", String.valueOf(longitude)).apply();
+                    sp1.edit().putString("lastloctime", String.valueOf(lastloctime)).apply();
 
                 }
 
@@ -207,6 +239,10 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.main_logout_btn){
+            SharedPreferences preferences = getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
             mSignoutProgress.setTitle("Logout");
             mSignoutProgress.setMessage("Logging out...");
             mSignoutProgress.setCanceledOnTouchOutside(false);
