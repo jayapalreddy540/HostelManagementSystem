@@ -159,7 +159,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                         }
                                     });
-
+                                    SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                                    sp1.edit().putString("designation",designation).apply();
                                     startActivity(mainIntent);
                                     finish();
                                 }
