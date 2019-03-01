@@ -44,7 +44,6 @@
         <activity
             android:name=".Dialing"
             android:label="@string/app_name" />
-        <activity android:name=".TimerActivity" />
         <activity android:name=".MobileActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -70,6 +69,8 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+        <activity android:name=".CustomMap"
+            android:label="Map"/>
         <activity android:name=".StartActivity" />
         <activity
             android:name=".RegisterActivity"
@@ -77,13 +78,6 @@
         <activity
             android:name=".LoginActivity"
             android:parentActivityName=".StartActivity" />
-        <activity
-            android:name=".AddWardenActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".WardenListActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".StudentListActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MessageSending" />
         <activity
@@ -92,17 +86,7 @@
         <activity android:name=".SettingsActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" /> <!-- registering the receiver -->
-        <receiver
-            android:name=".MyAlarm"
-            android:enabled="true"
-            android:exported="true" />
-        <receiver android:name=".NetworkStateChangeReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
+            android:theme="@style/Base.Theme.AppCompat" />
         <service android:name=".MyFirebaseMessagingService" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

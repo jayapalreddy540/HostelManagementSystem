@@ -1,6 +1,5 @@
 package tk.codme.hostelmanagementsystem;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +34,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,7 +44,6 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static tk.codme.hostelmanagementsystem.NetworkStateChangeReceiver.IS_NETWORK_AVAILABLE;
 
 
 public class MainActivity extends AppCompatActivity
@@ -81,8 +80,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Feedback", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent feedback=new Intent(MainActivity.this,FeedBackActivity.class);
+                startActivity(feedback);
             }
         });
 
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
 
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content_frame, new HomeFragment());
+        tx.commit();
+
 
         mAuth= FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
@@ -106,16 +111,6 @@ public class MainActivity extends AppCompatActivity
         name=sp.getString("name","");
         image=sp.getString("image","default");
 
-        IntentFilter intentFilter = new IntentFilter(NetworkStateChangeReceiver.NETWORK_AVAILABLE_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                boolean isNetworkAvailable = intent.getBooleanExtra(IS_NETWORK_AVAILABLE, false);
-                String networkStatus = isNetworkAvailable ? "connected" : "disconnected";
-                Toast.makeText(MainActivity.this,"networkStatus:"+networkStatus,Toast.LENGTH_LONG).show();
-                Snackbar.make(findViewById(R.id.drawer_layout), "Network Status: " + networkStatus, Snackbar.LENGTH_LONG).show();
-            }
-        }, intentFilter);
 
         TextView navUsername = (TextView) headerView.findViewById(R.id.textView);
         navUsername.setText(name);
@@ -126,12 +121,12 @@ public class MainActivity extends AppCompatActivity
             Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(imageview, new Callback() {
                 @Override
                 public void onSuccess() {
-
+                    Picasso.get().load(image).placeholder(R.drawable.default_img).into(imageview);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Picasso.get().load(image).placeholder(R.drawable.default_img).into(imageview);
+
                 }
             });
         }
@@ -152,18 +147,18 @@ public class MainActivity extends AppCompatActivity
                      name = dataSnapshot.child("name").getValue().toString();
                     designation=dataSnapshot.child("designation").getValue().toString();
                      image=dataSnapshot.child("image").getValue().toString();
-                     latitude = (Double) dataSnapshot.child("lat").getValue();
-                     longitude = (Double) dataSnapshot.child("long").getValue();
-                    lastloctime = dataSnapshot.child("lastloctime").getValue().toString();
+                    // latitude = (Double) dataSnapshot.child("lat").getValue();
+                    // longitude = (Double) dataSnapshot.child("long").getValue();
+                  //  lastloctime = dataSnapshot.child("lastloctime").getValue().toString();
                     // mStatus.setText("you're " + name + " as " + designation);
 
                     SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
                     sp1.edit().putString("designation",designation).apply();
                     sp1.edit().putString("name",name).apply();
                     sp1.edit().putString("image",image).apply();
-                    sp1.edit().putString("latitude", String.valueOf(latitude)).apply();
-                    sp1.edit().putString("longitude", String.valueOf(longitude)).apply();
-                    sp1.edit().putString("lastloctime", String.valueOf(lastloctime)).apply();
+                   // sp1.edit().putString("latitude", String.valueOf(latitude)).apply();
+                    //sp1.edit().putString("longitude", String.valueOf(longitude)).apply();
+                    //sp1.edit().putString("lastloctime", String.valueOf(lastloctime)).apply();
 
                 }
 
@@ -276,40 +271,54 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if(id==R.id.nav_home){
+            HomeFragment fragmenthome = new HomeFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame,fragmenthome).commit();
+        }
 
-        if (id == R.id.nav_members) {
+        else if (id == R.id.nav_members) {
             if(designation.equals("admin")){
-                Intent wlIntent = new Intent(MainActivity.this, WardenListActivity.class);
-                startActivity(wlIntent);
+              /*  Intent wlIntent = new Intent(MainActivity.this, WardenListFragment.class);
+                startActivity(wlIntent);*/
+                WardenListFragment fragmentwardenlist = new WardenListFragment();
+                FragmentManager manager=getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame,fragmentwardenlist).commit();
             }
             else if(designation.equals("warden")){
-                Intent wl1Intent = new Intent(MainActivity.this, StudentListActivity.class);
-                startActivity(wl1Intent);
+                StudentListFragment fragmentstudentlist = new StudentListFragment();
+                FragmentManager manager=getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame,fragmentstudentlist).commit();
             }
         } else if (id == R.id.nav_addmembers) {
             if(designation.equals("admin")){
-                Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
-                SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-                sp1.edit().putString("designationto","warden").apply();
-                sp1.edit().putString("pid",currentUid).apply();
-                startActivity(awIntent);
+                SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                sp.edit().putString("designationto","warden").apply();
+                sp.edit().putString("pid",currentUid).apply();
+                AddWardenFragment fragmentaddwarden = new AddWardenFragment();
+                FragmentManager manager=getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame,fragmentaddwarden).commit();
             }
             else if(designation.equals("warden")){
                 SharedPreferences sp2=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
                 sp2.edit().putString("designationto","student").apply();
                 sp2.edit().putString("pid",currentUid).apply();
-                AddStudentActivity fragmentaddstudent = new AddStudentActivity();
+                AddStudentFragment fragmentaddstudent = new AddStudentFragment();
                 FragmentManager manager=getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.content_frame,fragmentaddstudent).commit();
             }
 
         } else if (id == R.id.nav_location) {
-            Intent mapIntent=new Intent(MainActivity.this,MapsActivity.class);
+
+           Intent mapIntent=new Intent(MainActivity.this,MapsActivity.class);
             startActivity(mapIntent);
 
         } else if (id == R.id.nav_outing) {
-            Intent timeIntent=new Intent(MainActivity.this,TimerActivity.class);
-            startActivity(timeIntent);
+            TimerActivity fragmenttime= new TimerActivity();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame,fragmenttime).commit();
+            /*Intent timeIntent=new Intent(MainActivity.this,TimerActivity.class);
+            startActivity(timeIntent);*/
 
         } else if (id == R.id.nav_share) {
 

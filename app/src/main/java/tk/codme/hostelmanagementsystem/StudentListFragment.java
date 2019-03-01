@@ -2,6 +2,7 @@ package tk.codme.hostelmanagementsystem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,35 +24,34 @@ import com.google.firebase.database.Query;
 
 
 
-public class StudentListActivity extends AppCompatActivity {
+public class StudentListFragment extends Fragment {
 
     private RecyclerView mUsersList;
     private Query mUsersDatabase;
     private FirebaseAuth mAuth;
-
+    private View mMainView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wardenlist);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mMainView = inflater.inflate(R.layout.activity_wardenlist, container, false);
 
          String cid;
         mAuth=FirebaseAuth.getInstance();
-        if(getIntent().hasExtra("user_id"))
-         cid=getIntent().getStringExtra("user_id");
+        if(getActivity().getIntent().hasExtra("user_id"))
+         cid=getActivity().getIntent().getStringExtra("user_id");
         else cid=mAuth.getCurrentUser().getUid();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("students").orderByChild("caretaker").equalTo(cid);
 
 
-        mUsersList = (RecyclerView) findViewById(R.id.wardens_list);
+        mUsersList = (RecyclerView) mMainView.findViewById(R.id.wardens_list);
         mUsersList.setHasFixedSize(true);
-        mUsersList.setLayoutManager(new LinearLayoutManager(this));
-
+        mUsersList.setLayoutManager(new LinearLayoutManager(getContext()));
+return mMainView;
 
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         FirebaseRecyclerOptions<Students> options = new FirebaseRecyclerOptions.Builder<Students>()
                 .setQuery(mUsersDatabase, Students.class)
@@ -78,9 +78,9 @@ public class StudentListActivity extends AppCompatActivity {
                 usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent profileIntent=new Intent(StudentListActivity.this,ProfileActivity.class);
+                        Intent profileIntent=new Intent(getContext(),ProfileActivity.class);
                         profileIntent.putExtra("user_id",user_id);
-                        profileIntent.putExtra("designation","students");
+                        profileIntent.putExtra("designation","student");
                         startActivity(profileIntent);
                     }
                 });
@@ -92,7 +92,7 @@ public class StudentListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         // firebaseRecyclerAdapter.stopListening();
     }

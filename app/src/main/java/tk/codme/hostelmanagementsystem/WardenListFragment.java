@@ -1,60 +1,49 @@
 package tk.codme.hostelmanagementsystem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
-public class WardenListActivity extends AppCompatActivity {
+public class WardenListFragment extends Fragment {
 
     private RecyclerView mUsersList;
     private Query mUsersDatabase;
     private FirebaseAuth mAuth;
     private ImageButton phone,sms;
-
+    private View mMainView;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wardenlist);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mMainView = inflater.inflate(R.layout.activity_wardenlist, container, false);
 
         mAuth=FirebaseAuth.getInstance();
         String cid=mAuth.getCurrentUser().getUid();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("wardens").orderByChild("caretaker").equalTo(cid);
 
 
-        mUsersList = (RecyclerView) findViewById(R.id.wardens_list);
+        mUsersList = (RecyclerView)mMainView.findViewById(R.id.wardens_list);
         mUsersList.setHasFixedSize(true);
-        mUsersList.setLayoutManager(new LinearLayoutManager(this));
-
+        mUsersList.setLayoutManager(new LinearLayoutManager(getContext()));
+        return mMainView;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         FirebaseRecyclerOptions<Wardens> options = new FirebaseRecyclerOptions.Builder<Wardens>()
                 .setQuery(mUsersDatabase, Wardens.class)
@@ -72,11 +61,11 @@ public class WardenListActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull final WardensViewHolder usersViewHolder, int i, @NonNull Wardens users) {
 
-                phone=(ImageButton)findViewById(R.id.phone);
+                phone=(ImageButton)mMainView.findViewById(R.id.phone);
             /*    phone.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(WardenListActivity.this,"call",Toast.LENGTH_LONG).show();
+                        Toast.makeText(WardenListFragment.this,"call",Toast.LENGTH_LONG).show();
                     }
                 });
                 */
@@ -91,20 +80,20 @@ public class WardenListActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 CharSequence options[] = new CharSequence[]{"Open Profile", "Students list"};
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(WardenListActivity.this);
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Select Options");
                                 builder.setItems(options, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         //click event for each item
                                         if (which == 0) {
-                                            Intent profileIntent=new Intent(WardenListActivity.this,ProfileActivity.class);
+                                            Intent profileIntent=new Intent(getContext(),ProfileActivity.class);
                                             profileIntent.putExtra("user_id",user_id);
-                                            profileIntent.putExtra("designation","wardens");
+                                            profileIntent.putExtra("designation","warden");
                                             startActivity(profileIntent);
                                         }
                                         if (which == 1) {
-                                            Intent stdIntent = new Intent(WardenListActivity.this, StudentListActivity.class);
+                                            Intent stdIntent = new Intent(getContext(), StudentListFragment.class);
                                             stdIntent.putExtra("user_id", user_id);
                                             startActivity(stdIntent);
                                         }
@@ -121,7 +110,7 @@ public class WardenListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         // firebaseRecyclerAdapter.stopListening();
     }

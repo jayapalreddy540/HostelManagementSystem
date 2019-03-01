@@ -15,7 +15,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="0dp"
         android:layout_marginBottom="36dp"
-        android:onClick="setDate"
         android:text="SET DATE" />
 
     <Button
@@ -28,7 +27,6 @@
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="36dp"
         android:layout_toEndOf="@+id/setDate"
-        android:onClick="setTime"
         android:text="SET TIME" />
 
     <TextView
@@ -42,7 +40,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="101dp"
         android:layout_marginBottom="33dp"
-        android:text="date_label_set"
+        android:text="Date : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -55,7 +53,7 @@
         android:layout_marginStart="104dp"
         android:layout_marginEnd="121dp"
         android:layout_marginBottom="24dp"
-        android:text="date_view_set"
+        android:text="Time : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
@@ -68,7 +66,6 @@
         android:layout_marginStart="113dp"
         android:layout_marginEnd="165dp"
         android:layout_marginBottom="27dp"
-        android:onClick="submitTime"
         android:text="Submit" />
 
     <EditText

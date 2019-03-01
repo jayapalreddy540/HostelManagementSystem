@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class AddStudentActivity extends Fragment {
+public class AddStudentFragment extends Fragment {
 
     private TextInputLayout mDisplayName;
     private TextInputLayout mEmail;
@@ -49,7 +49,7 @@ public class AddStudentActivity extends Fragment {
 
     private View mMainView;
 
-    public AddStudentActivity(){}
+    public AddStudentFragment(){}
 
 
     @Override
@@ -129,9 +129,10 @@ public class AddStudentActivity extends Fragment {
                                     mRegProgress.setCanceledOnTouchOutside(false);
                                     mRegProgress.show();
                                     FirebaseAuth.getInstance().signOut();
+                                    mRegProgress.hide();
                                     Intent mainIntent=new Intent(getContext(),LoginActivity.class);
                                     startActivity(mainIntent);
-                                    mRegProgress.hide();
+
                                 }
                             });
 

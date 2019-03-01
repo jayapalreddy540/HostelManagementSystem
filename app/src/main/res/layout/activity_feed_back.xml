@@ -13,9 +13,11 @@
         android:layout_above="@+id/name"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="62dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="16dp"
         android:text="Feedback"
-        android:textSize="10pt"></TextView>
+        android:textStyle="bold"
+        android:textSize="20pt">
+    </TextView>
 
     <EditText
         android:id="@+id/name"
@@ -32,20 +34,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/SpinnerFeedbackType"
-        android:layout_marginBottom="54dp"
+        android:layout_marginBottom="20dp"
         android:hint="email"
-        android:inputType="textEmailAddress">
-    </EditText>
+        android:inputType="textEmailAddress"></EditText>
 
     <Spinner
         android:id="@+id/SpinnerFeedbackType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/FeedbackBody"
-        android:layout_marginBottom="29dp"
+        android:layout_marginBottom="15dp"
         android:entries="@array/feedbacktypelist"
-        android:prompt="@string/feedback">
-    </Spinner>
+        android:prompt="@string/feedback"></Spinner>
 
     <EditText
         android:id="@+id/FeedbackBody"
@@ -72,7 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="69dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="19dp"
-        android:text="SUBMIT">
-    </Button>
+        android:layout_marginBottom="10dp"
+        android:text="SUBMIT"></Button>
 </RelativeLayout>

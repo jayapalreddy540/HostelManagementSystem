@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseUser mCurrent_user;
     private  String designation;
-    private String lastloctime;
+    private String lastloctime,display_name;
 
 
     @Override
@@ -63,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
         final String tempDesignation=getIntent().getStringExtra("designation");
 
         mRootRef=FirebaseDatabase.getInstance().getReference().child("users");
-        mUsersDatabase=mRootRef.child(tempDesignation).child(user_id);
+        mUsersDatabase=mRootRef.child(tempDesignation+"s").child(user_id);
         mUsersDatabase.keepSynced(true);
         mCurrent_user=FirebaseAuth.getInstance().getCurrentUser();
 
@@ -84,11 +84,11 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String designation=dataSnapshot.child("designation").getValue().toString();
-                String display_name = dataSnapshot.child("name").getValue().toString();
+                 display_name = dataSnapshot.child("name").getValue().toString();
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
-                 latitude= (Double) dataSnapshot.child("lat").getValue();
-                 longitude= (Double) dataSnapshot.child("long").getValue();
+                latitude= (Double) dataSnapshot.child("lat").getValue();
+                longitude= (Double) dataSnapshot.child("long").getValue();
                  lastloctime=getTimeDate((Long)dataSnapshot.child("lastloctime").getValue());
 
                /* GetTimeAgo getTimeAgo=new GetTimeAgo();
@@ -117,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
                  String country = addresses.get(0).getCountryName();
                  String postalCode = addresses.get(0).getPostalCode();
                  String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-                 mAddress.setText("Last Loc : \n"+country+" "+state+" "+city+" "+" "+address+" "+postalCode+" "+" "+knownName+"\n\n"+"at :  "+lastloctime);
+                 mAddress.setText("Last Loc : \n"+knownName+" "+address+" "+"\n\n"+"at :  "+lastloctime);
              }
              catch(Exception e){}
                 if(!image.equals("default")){
@@ -146,7 +146,9 @@ public class ProfileActivity extends AppCompatActivity {
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mapIntent=new Intent(ProfileActivity.this,MapsActivity.class);
+                Intent mapIntent=new Intent(ProfileActivity.this,CustomMap.class);
+                mapIntent.putExtra("user_id",user_id);
+                mapIntent.putExtra("designation",tempDesignation);
                 startActivity(mapIntent);
             }
         });
