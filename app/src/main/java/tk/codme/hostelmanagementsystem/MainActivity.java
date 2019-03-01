@@ -1,5 +1,6 @@
 package tk.codme.hostelmanagementsystem;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
@@ -32,6 +34,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -140,6 +143,7 @@ public class MainActivity extends AppCompatActivity
 
         if(currentUser!=null) {
             currentUid = currentUser.getUid();
+            Log.d("desig",designation);
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s").child(currentUid);
             mUserDatabase.keepSynced(true);
             mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -218,9 +222,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
     private void sendToStart() {
-        mSignoutProgress.dismiss();
+
         Intent startIntent=new Intent(MainActivity.this,StartActivity.class);
         startActivity(startIntent);
+        SharedPreferences preferences = getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        mSignoutProgress.dismiss();
         finish();
     }
 
@@ -280,15 +289,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_addmembers) {
             if(designation.equals("admin")){
                 Intent awIntent = new Intent(MainActivity.this, AddWardenActivity.class);
-                awIntent.putExtra("designation", "warden");
-                awIntent.putExtra("pid",currentUid);
+                SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                sp1.edit().putString("designationto","warden").apply();
+                sp1.edit().putString("pid",currentUid).apply();
                 startActivity(awIntent);
             }
             else if(designation.equals("warden")){
-                Intent aw1Intent = new Intent(MainActivity.this, AddStudentActivity.class);
-                aw1Intent.putExtra("designation", "student");
-                aw1Intent.putExtra("pid",currentUid);
-                startActivity(aw1Intent);
+                SharedPreferences sp2=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+                sp2.edit().putString("designationto","student").apply();
+                sp2.edit().putString("pid",currentUid).apply();
+                AddStudentActivity fragmentaddstudent = new AddStudentActivity();
+                FragmentManager manager=getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame,fragmentaddstudent).commit();
             }
 
         } else if (id == R.id.nav_location) {

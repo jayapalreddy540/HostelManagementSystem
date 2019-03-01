@@ -1,5 +1,6 @@
 package tk.codme.hostelmanagementsystem;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -21,6 +22,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -44,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager locationManager;
 
     private String designation;
-    private Double latitude,longitude;
+    private Double latitude, longitude;
     private DatabaseReference mRef;
 
 
@@ -55,22 +58,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
-
-        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-         designation = sp.getString("designation", "");
-         latitude= Double.valueOf(sp.getString("latitude",""));
-         longitude= Double.valueOf(sp.getString("longitude",""));
-
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mo = new MarkerOptions().position(new LatLng(latitude, longitude)).title("current location");
-        try {
-            marker = mMap.addMarker(mo);
-            marker.setPosition(new LatLng(latitude, longitude));
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
-        }
-        catch(Exception e){}
+        GoogleMapOptions options = new GoogleMapOptions();
+        options.mapType(GoogleMap.MAP_TYPE_HYBRID)
+                .compassEnabled(true)
+                .rotateGesturesEnabled(true)
+                .tiltGesturesEnabled(true);
+
+
+        SharedPreferences sp = getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        designation = sp.getString("designation", "");
+        latitude = Double.valueOf(sp.getString("latitude", ""));
+        longitude = Double.valueOf(sp.getString("longitude", ""));
+
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
             requestPermissions(PERMISSIONS, PERMISSION_ALL);
         } else requestLocation();
@@ -141,6 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -150,15 +154,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         */
+        mo = new MarkerOptions().position(new LatLng(18.2, 79.1)).title("current location");
         marker = mMap.addMarker(mo);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(18.2, 79.1)));
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
         LatLng myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
-        marker.setPosition(myCoordinates);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinates));
+        try{marker.setPosition(myCoordinates);}catch(Exception e){}
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCoordinates,16.0f));
 
         SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
         sp.edit().putString("designation",designation).apply();
@@ -197,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         criteria.setPowerRequirement(Criteria.POWER_HIGH);
         String provider = locationManager.getBestProvider(criteria, true);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(PERMISSIONS, PERMISSION_ALL);
             // TODO: Consider calling
             //    Activity#requestPermissions
             // here to request the missing permissions, and then overriding

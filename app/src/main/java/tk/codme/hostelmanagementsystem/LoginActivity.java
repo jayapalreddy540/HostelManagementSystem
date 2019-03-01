@@ -118,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     String currentUid=currentUser.getUid();
 
-
                     final String current_user_id=mAuth.getCurrentUser().getUid();
                      mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation + "s").child(currentUid);
 
@@ -129,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
                                 return;
                             }
                             String token = task.getResult().getToken();
-
 
                             mUserDatabase.child("device_token").setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -146,7 +144,9 @@ public class LoginActivity extends AppCompatActivity {
                                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
                                                 sp.edit().putString("designation",designation).apply();
-                                                mLoginProgress.dismiss();
+                                                try {
+                                                    mLoginProgress.dismiss();
+                                                }catch (Exception e){}
                                                 startActivity(mainIntent);
                                                 finish();
                                             }
@@ -159,10 +159,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                         }
                                     });
-                                    SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-                                    sp1.edit().putString("designation",designation).apply();
-                                    startActivity(mainIntent);
-                                    finish();
                                 }
                             });
 
@@ -171,10 +167,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     FirebaseAuth.getInstance().signOut();
+
                     Toast.makeText(LoginActivity.this, "Login Failed!! Please check login credentials",
                             Toast.LENGTH_SHORT).show();
                     finish();
-                    startActivity(getIntent());
+                    //startActivity(getIntent());
                 }
 
 

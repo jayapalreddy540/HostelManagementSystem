@@ -1,10 +1,14 @@
 package tk.codme.hostelmanagementsystem;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +30,9 @@ import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-public class AddStudentActivity extends AppCompatActivity {
+public class AddStudentActivity extends Fragment {
 
     private TextInputLayout mDisplayName;
     private TextInputLayout mEmail;
@@ -42,31 +47,33 @@ public class AddStudentActivity extends AppCompatActivity {
 
     private ProgressDialog mRegProgress;
 
+    private View mMainView;
+
+    public AddStudentActivity(){}
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mMainView = inflater.inflate(R.layout.activity_addstudent, container, false);
 
-
-        final String designation=getIntent().getStringExtra("designation");
-        final String pid=getIntent().getStringExtra("pid");
-
-        setContentView(R.layout.activity_addstudent);
+        SharedPreferences sp=this.getActivity().getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        final String designation=sp.getString("designationto","");
+        final String pid=sp.getString("pid","");
 
         mAuth = FirebaseAuth.getInstance();
 
 
-        mDisplayName=(TextInputLayout)findViewById(R.id.reg_disp_name);
-        mEmail=(TextInputLayout)findViewById(R.id.reg_email);
-        mPassword=(TextInputLayout)findViewById(R.id.reg_pass);
-        mMobile=(TextInputLayout)findViewById(R.id.reg_mobile);
-        pMobile=(TextInputLayout)findViewById(R.id.reg_pmobile);
-        mCreateBtn=(Button)findViewById(R.id.reg_create_btn);
-        headText=(TextView)findViewById(R.id.headingtext);
+        mDisplayName=(TextInputLayout)mMainView.findViewById(R.id.reg_disp_name);
+        mEmail=(TextInputLayout)mMainView.findViewById(R.id.reg_email);
+        mPassword=(TextInputLayout)mMainView.findViewById(R.id.reg_pass);
+        mMobile=(TextInputLayout)mMainView.findViewById(R.id.reg_mobile);
+        pMobile=(TextInputLayout)mMainView.findViewById(R.id.reg_pmobile);
+        mCreateBtn=(Button)mMainView.findViewById(R.id.reg_create_btn);
+        headText=(TextView)mMainView.findViewById(R.id.headingtext);
 
             headText.setText("CREATE STUDENT");
 
-        mRegProgress=new ProgressDialog(this);
+        mRegProgress=new ProgressDialog(getContext());
 
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,11 +94,12 @@ public class AddStudentActivity extends AppCompatActivity {
 
             }
         });
+        return mMainView;
     }
 
     private void  register_user(final String display_name, String email, String password,final String mobile,final String pmobile,final String user,final String pid){
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -114,14 +122,14 @@ public class AddStudentActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     mRegProgress.dismiss();
-                                    Toast.makeText(AddStudentActivity.this,"Student Created ..",Toast.LENGTH_LONG).show();
-                                    mRegProgress=new ProgressDialog(AddStudentActivity.this);
+                                    Toast.makeText(getContext(),"Student Created ..",Toast.LENGTH_LONG).show();
+                                    mRegProgress=new ProgressDialog(getContext());
                                     mRegProgress.setTitle("Important Messsage ");
                                     mRegProgress.setMessage("You Should Re-login to continue.");
                                     mRegProgress.setCanceledOnTouchOutside(false);
                                     mRegProgress.show();
                                     FirebaseAuth.getInstance().signOut();
-                                    Intent mainIntent=new Intent(AddStudentActivity.this,LoginActivity.class);
+                                    Intent mainIntent=new Intent(getContext(),LoginActivity.class);
                                     startActivity(mainIntent);
                                     mRegProgress.hide();
                                 }
@@ -144,7 +152,7 @@ public class AddStudentActivity extends AppCompatActivity {
                                 error="Unknown error";
                                 e.printStackTrace();
                             }
-                            Toast.makeText(getApplicationContext(),error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),error, Toast.LENGTH_SHORT).show();
                         }
 
                         // ...
