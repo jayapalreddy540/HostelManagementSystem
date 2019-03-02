@@ -43,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mProfileName,mProfileMobile,mProfilePMobile,mAddress;
     private ImageButton location;
 
-    private Double latitude,longitude;
+    private Double latitude=0.0,longitude=0.0;
 
 
     private DatabaseReference mUsersDatabase,mRootRef;
@@ -87,9 +87,16 @@ public class ProfileActivity extends AppCompatActivity {
                  display_name = dataSnapshot.child("name").getValue().toString();
                 String mobile = dataSnapshot.child("mobile").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
-                latitude= (Double) dataSnapshot.child("lat").getValue();
-                longitude= (Double) dataSnapshot.child("long").getValue();
-                 lastloctime=getTimeDate((Long)dataSnapshot.child("lastloctime").getValue());
+
+                 try{
+                     latitude= (Double) dataSnapshot.child("lat").getValue();
+                     longitude= (Double) dataSnapshot.child("long").getValue();
+                     lastloctime=getTimeDate((Long)dataSnapshot.child("lastloctime").getValue());
+                 }
+                 catch (Exception e){
+                     location.setClickable(false);
+                     Toast.makeText(ProfileActivity.this,display_name+" has not logged in since you registered him/her",Toast.LENGTH_LONG).show();
+                 }
 
                /* GetTimeAgo getTimeAgo=new GetTimeAgo();
                 long lastTime=(Long)(dataSnapshot.child("online").getValue());
@@ -142,16 +149,22 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
-
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mapIntent=new Intent(ProfileActivity.this,CustomMap.class);
-                mapIntent.putExtra("user_id",user_id);
-                mapIntent.putExtra("designation",tempDesignation);
-                startActivity(mapIntent);
-            }
-        });
+       try {
+           location.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent mapIntent = new Intent(ProfileActivity.this, CustomMap.class);
+                   mapIntent.putExtra("user_id", user_id);
+                   mapIntent.putExtra("designation", tempDesignation);
+                   mapIntent.putExtra("latitude", latitude);
+                   mapIntent.putExtra("longitude", longitude);
+                   startActivity(mapIntent);
+               }
+           });
+       }
+       catch (Exception e){
+           Toast.makeText(ProfileActivity.this,display_name+" has not logged in since you registered him/her",Toast.LENGTH_LONG).show();
+       }
 
     }
 

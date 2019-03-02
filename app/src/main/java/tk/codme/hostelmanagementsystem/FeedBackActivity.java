@@ -3,6 +3,8 @@ package tk.codme.hostelmanagementsystem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +32,7 @@ public class FeedBackActivity extends AppCompatActivity {
     private Spinner feedbackSpinner;
     private CheckBox responseCheckbox;
     private Button Submit;
-    private String name,email,feedback,feedbackType;
+    private String name,email,feedback,feedbackType,caretaker;
     private DatabaseReference mFeedbackDatabase;
 
     @Override
@@ -45,6 +47,8 @@ public class FeedBackActivity extends AppCompatActivity {
         responseCheckbox = (CheckBox) findViewById(R.id.CheckBoxResponse);
 
         Submit=(Button)findViewById(R.id.ButtonSendFeedback);
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        caretaker=sp.getString("caretaker","");
 
 
         mFeedbackDatabase= FirebaseDatabase.getInstance().getReference().child("feedback");
@@ -63,6 +67,7 @@ public class FeedBackActivity extends AppCompatActivity {
                     DatabaseReference newFeedbackref = mFeedbackDatabase.push();
                     String newFeedbackId = newFeedbackref.getKey();
                     HashMap<String, String> userMap = new HashMap<>();
+                    userMap.put("caretaker",caretaker);
                     userMap.put("name", name);
                     userMap.put("email", email);
                     userMap.put("feedbackType", feedbackType);

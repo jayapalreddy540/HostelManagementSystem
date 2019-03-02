@@ -63,6 +63,7 @@
             android:textStyle="bold"
             android:text="Room 1" />
         <ImageView
+            android:id="@+id/i1"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -71,6 +72,7 @@
             android:src="@drawable/yes"/>
 
         <ImageView
+            android:id="@+id/i2"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -78,6 +80,7 @@
             android:gravity="center"
             android:src="@drawable/yes"/>
         <ImageView
+            android:id="@+id/i3"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -95,6 +98,7 @@
             android:textStyle="bold"
             android:text="Room 2" />
         <ImageView
+            android:id="@+id/i4"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -103,6 +107,7 @@
             android:src="@drawable/yes"/>
 
         <ImageView
+            android:id="@+id/i5"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -110,6 +115,7 @@
             android:gravity="center"
             android:src="@drawable/yes"/>
         <ImageView
+            android:id="@+id/i6"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -127,6 +133,7 @@
         android:textStyle="bold"
         android:text="Room 3" />
     <ImageView
+        android:id="@+id/i7"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_weight="1"
@@ -135,6 +142,7 @@
         />
 
     <ImageView
+        android:id="@+id/i8"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_weight="1"
@@ -142,6 +150,7 @@
         android:gravity="center"
         android:src="@drawable/yes"/>
     <ImageView
+        android:id="@+id/i9"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_weight="1"
@@ -159,6 +168,7 @@
             android:textStyle="bold"
             android:text="Room 4" />
         <ImageView
+            android:id="@+id/i10"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -167,6 +177,7 @@
         android:src="@drawable/yes"/>
 
         <ImageView
+            android:id="@+id/i11"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -174,6 +185,7 @@
             android:gravity="center"
             />
         <ImageView
+            android:id="@+id/i12"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -191,6 +203,7 @@
             android:textStyle="bold"
             android:text="Room 5" />
         <ImageView
+            android:id="@+id/i13"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -199,6 +212,7 @@
             android:src="@drawable/yes"/>
 
         <ImageView
+            android:id="@+id/i14"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -206,6 +220,7 @@
             android:gravity="center"
             />
         <ImageView
+            android:id="@+id/i15"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"

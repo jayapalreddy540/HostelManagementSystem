@@ -74,11 +74,17 @@ public class CustomMap extends FragmentActivity implements OnMapReadyCallback, L
                 .rotateGesturesEnabled(true)
                 .tiltGesturesEnabled(true);
 
-        final String user_id = getIntent().getStringExtra("user_id");
-        final String tempDesignation = getIntent().getStringExtra("designation");
+
+        Intent tmp=getIntent();
+        final String user_id = tmp.getStringExtra("user_id");
+        final String tempDesignation = tmp.getStringExtra("designation");
+        latitude= tmp.getDoubleExtra("latitude",0.0);
+        longitude= tmp.getDoubleExtra("longitude",0.0);
         mRootRef = FirebaseDatabase.getInstance().getReference().child("users");
         mUsersDatabase = mRootRef.child(tempDesignation+"s").child(user_id);
         mUsersDatabase.keepSynced(true);
+
+
 
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override

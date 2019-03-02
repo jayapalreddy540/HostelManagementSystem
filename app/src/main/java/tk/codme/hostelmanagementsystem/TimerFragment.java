@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 
-public class TimerActivity extends Fragment {
+public class TimerFragment extends Fragment {
     private View mView;
     private Calendar calendar;
     private EditText reason;

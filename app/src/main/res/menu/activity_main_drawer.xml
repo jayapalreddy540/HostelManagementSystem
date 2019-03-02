@@ -17,6 +17,10 @@
             android:icon="@drawable/addstudent"
             android:title="Add Members" />
         <item
+            android:id="@+id/nav_rooms"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Rooms" />
+        <item
             android:id="@+id/nav_location"
             android:icon="@drawable/location"
             android:title="Location" />
@@ -24,16 +28,16 @@
             android:id="@+id/nav_outing"
             android:icon="@drawable/common_google_signin_btn_icon_dark"
             android:title="Outing" />
+        <item
+            android:id="@+id/nav_feedbacks"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Feedbacks" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Feedbacks" />
-            <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_contact"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Contact" />
         </menu>

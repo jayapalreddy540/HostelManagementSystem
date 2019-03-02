@@ -1,10 +1,8 @@
 package tk.codme.hostelmanagementsystem;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -27,7 +25,6 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -35,15 +32,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 
 public class MainActivity extends AppCompatActivity
@@ -52,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference mUserDatabase;
+    private NavigationView navigationView;
 
     private ProgressDialog mSignoutProgress;
     //  private Button mWardens,mAddwarden,mSend,mMaps;
@@ -60,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     GridLayout mainGrid;
 
     private String designation,lastloctime;
-    private String currentUid,name,image;
+    private String currentUid,name,image,caretaker;
     private Double latitude,longitude;
 
 
@@ -71,10 +66,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //mainGrid = (GridLayout) findViewById(R.id.mainGrid);
+        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        designation=sp.getString("designation","");
+        name=sp.getString("name","");
+        image=sp.getString("image","default");
 
-        //Set Event
-        //setSingleEvent(mainGrid);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,9 +89,27 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
+
+
+        Menu nav_Menu = navigationView.getMenu();
+        if(designation.equals("student")) {
+            nav_Menu.findItem(R.id.nav_members).setVisible(false);
+            nav_Menu.findItem(R.id.nav_addmembers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_feedbacks).setVisible(false);
+            nav_Menu.findItem(R.id.nav_rooms).setVisible(false);
+        }
+        else if(designation.equals("warden")){
+            nav_Menu.findItem(R.id.nav_outing).setVisible(false);
+        }
+        else if(designation.equals("admin")){
+            nav_Menu.findItem(R.id.nav_outing).setVisible(false);
+            nav_Menu.findItem(R.id.nav_rooms).setVisible(false);
+        }
+
+
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content_frame, new HomeFragment());
@@ -104,12 +118,6 @@ public class MainActivity extends AppCompatActivity
 
         mAuth= FirebaseAuth.getInstance();
         currentUser=mAuth.getCurrentUser();
-
-
-        SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
-        designation=sp.getString("designation","");
-        name=sp.getString("name","");
-        image=sp.getString("image","default");
 
 
         TextView navUsername = (TextView) headerView.findViewById(R.id.textView);
@@ -147,18 +155,20 @@ public class MainActivity extends AppCompatActivity
                      name = dataSnapshot.child("name").getValue().toString();
                     designation=dataSnapshot.child("designation").getValue().toString();
                      image=dataSnapshot.child("image").getValue().toString();
-                    // latitude = (Double) dataSnapshot.child("lat").getValue();
-                    // longitude = (Double) dataSnapshot.child("long").getValue();
-                  //  lastloctime = dataSnapshot.child("lastloctime").getValue().toString();
-                    // mStatus.setText("you're " + name + " as " + designation);
+                     try {
+                         caretaker = dataSnapshot.child("caretaker").getValue().toString();
+                     }
+                     catch (Exception e){}
+
 
                     SharedPreferences sp1=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
                     sp1.edit().putString("designation",designation).apply();
                     sp1.edit().putString("name",name).apply();
                     sp1.edit().putString("image",image).apply();
-                   // sp1.edit().putString("latitude", String.valueOf(latitude)).apply();
-                    //sp1.edit().putString("longitude", String.valueOf(longitude)).apply();
-                    //sp1.edit().putString("lastloctime", String.valueOf(lastloctime)).apply();
+                    try {
+                        sp1.edit().putString("caretaker", caretaker).apply();
+                    }
+                    catch (Exception e){}
 
                 }
 
@@ -173,29 +183,8 @@ public class MainActivity extends AppCompatActivity
             sendToStart();
         }
 
-
-
     }
 
-    private void setSingleEvent(GridLayout mainGrid) {
-        //Loop all child item of Main Grid
-        for (int i = 0; i < mainGrid.getChildCount(); i++) {
-            //You can see , all child item is CardView , so we just cast object to CardView
-            CardView cardView = (CardView) mainGrid.getChildAt(i);
-            final int finalI = i;
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(MainActivity.this, TimerActivity.class);
-                    intent.putExtra("info", "This is activity from card item index  " + finalI);
-                    startActivity(intent);
-
-                }
-            });
-        }
-
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -270,6 +259,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
         if(id==R.id.nav_home){
             HomeFragment fragmenthome = new HomeFragment();
@@ -314,16 +304,21 @@ public class MainActivity extends AppCompatActivity
             startActivity(mapIntent);
 
         } else if (id == R.id.nav_outing) {
-            TimerActivity fragmenttime= new TimerActivity();
+            TimerFragment fragmenttime= new TimerFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_frame,fragmenttime).commit();
-            /*Intent timeIntent=new Intent(MainActivity.this,TimerActivity.class);
+            /*Intent timeIntent=new Intent(MainActivity.this,TimerFragment.class);
             startActivity(timeIntent);*/
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_rooms) {
+            RoomFragment fragmentroom= new RoomFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame,fragmentroom).commit();
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_feedbacks) {
+            FeedBackFragment fragmentfeedback= new FeedBackFragment();
+            FragmentManager manager=getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame,fragmentfeedback).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
