@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_outing).setVisible(false);
             nav_Menu.findItem(R.id.nav_rooms).setVisible(false);
             nav_Menu.findItem(R.id.nav_outingdetails).setVisible(false);
+            nav_Menu.findItem(R.id.nav_feedbacks).setVisible(false);
         }
 
 
@@ -157,10 +158,11 @@ public class MainActivity extends AppCompatActivity
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                     name = dataSnapshot.child("name").getValue().toString();
+                    try {
+                        name = dataSnapshot.child("name").getValue().toString();
                     designation=dataSnapshot.child("designation").getValue().toString();
                      image=dataSnapshot.child("image").getValue().toString();
-                     try {
+
                          caretaker = dataSnapshot.child("caretaker").getValue().toString();
                      }
                      catch (Exception e){}

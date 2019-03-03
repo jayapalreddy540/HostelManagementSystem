@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView mProfileImage;
     private TextView mProfileName,mProfileMobile,mProfilePMobile,mAddress;
     private ImageButton location;
+    private Button remove;
 
     private Double latitude=0.0,longitude=0.0;
 
@@ -73,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         mProfilePMobile=(TextView)findViewById(R.id.pmobile);
         mAddress=(TextView)findViewById(R.id.presentloc);
         location=(ImageButton)findViewById(R.id.loc);
+
 
         mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setTitle("Loading User Data");
@@ -149,6 +153,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
+
+
+
        try {
            location.setOnClickListener(new View.OnClickListener() {
                @Override

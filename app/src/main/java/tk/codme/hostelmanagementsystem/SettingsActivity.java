@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView mName;
     private TextView mStatus;
     private Button mStatusBtn,mChangePass;
-    private Button mImgBtn;
+    private Button mImgBtn,remove;
     private ProgressDialog mProgressDialog;
     private static final int GALLERY_PICK=1;
 
@@ -76,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         mStatusBtn=(Button)findViewById(R.id.settings_changeStatusBtn);
         mImgBtn=(Button)findViewById(R.id.settings_changeImgBtn);
         mChangePass=(Button)findViewById(R.id.chgpass);
+        remove=(Button)findViewById(R.id.remove);
 
         mImageStorage=FirebaseStorage.getInstance().getReference();
 
@@ -157,6 +158,30 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent statusIntent=new Intent(SettingsActivity.this,ChangePassActivity.class);
                 startActivity(statusIntent);
+            }
+        });
+
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                final DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s");
+
+                user.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    ref.child(user.getUid()).removeValue();
+                                    Toast.makeText(SettingsActivity.this,"account deleted",Toast.LENGTH_LONG).show();
+                                    Intent intent=new Intent(SettingsActivity.this,LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Toast.makeText(SettingsActivity.this,"account deleted failed",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
     }

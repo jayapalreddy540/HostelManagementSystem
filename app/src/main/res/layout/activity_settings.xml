@@ -9,11 +9,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/settings_image"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="103dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="128dp"
         android:src="@drawable/default_img" />
 
     <TextView
@@ -23,9 +26,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="133dp"
-        android:layout_marginTop="232dp"
-        android:layout_marginEnd="131dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="169dp"
+        android:layout_marginEnd="154dp"
         android:text="Display Name"
         android:textColor="@android:color/white"
         android:textSize="24sp" />
@@ -37,9 +40,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="276dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginEnd="136dp"
         android:text="Mobile"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
@@ -50,10 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="315dp"
-        android:layout_marginEnd="128dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="286dp"
         android:backgroundTint="@android:color/white"
         android:text="CHANGE IMAGE"
         android:textColor="@color/colorPrimary" />
@@ -62,12 +63,10 @@
         android:id="@+id/settings_changeStatusBtn"
         android:layout_width="172dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="377dp"
-        android:layout_marginEnd="118dp"
+        android:layout_marginTop="288dp"
+        android:layout_marginEnd="17dp"
         android:backgroundTint="@color/colorAccent"
         android:text="CHANGE NUMBER" />
 
@@ -78,9 +77,23 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="123dp"
-        android:layout_marginTop="440dp"
-        android:layout_marginEnd="115dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="128dp"
         android:text="CHANGE PASSWORD" />
+
+    <Button
+        android:id="@+id/remove"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="86dp"
+        android:layout_marginTop="433dp"
+        android:layout_marginEnd="114dp"
+        android:text="Remove Account" />
+
+
 
 </RelativeLayout>

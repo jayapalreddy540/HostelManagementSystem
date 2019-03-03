@@ -1,5 +1,7 @@
 package tk.codme.hostelmanagementsystem;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,27 +39,41 @@ public class HomeFragment extends Fragment {
     FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
     final String uid = current_user.getUid();
 
+    SharedPreferences sp=this.getActivity().getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+    final String designation=sp.getString("designation","");
+    final String caretaker=sp.getString("caretaker","");
+
     for(int i=0;i<=15;i++){
         chk[i]=(ImageView)mMainView.findViewById(mRoom[i]);
     }
-    mRef = FirebaseDatabase.getInstance().getReference().child("users").child("wardens").child(uid).child("seats");
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            for(int i=1;i<=15;i++){
-                alloc[i]=dataSnapshot.child("s"+i).getValue().toString();
-                Log.d(i+"",alloc[i]);
-                if(alloc[i].equals("true"))
-                    chk[i].setImageResource(R.drawable.yes);
-            }
+    if(designation.equals("student")) {
+        mRef = FirebaseDatabase.getInstance().getReference().child("users").child("wardens").child(caretaker).child("seats");
+    }
+    else{
+        mRef = FirebaseDatabase.getInstance().getReference().child("users").child("wardens").child(uid).child("seats");
+    }
+        try{
+            mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        for (int i = 1; i <= 15; i++) {
+                            alloc[i] = dataSnapshot.child("s" + i).getValue().toString();
+                            Log.d(i + "", alloc[i]);
+                            if (alloc[i].equals("true"))
+                                chk[i].setImageResource(R.drawable.yes);
+                        }
+                    }
+                    catch(Exception e){}
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    });
-
+catch(Exception e){}
     return mMainView;
 }
 }
