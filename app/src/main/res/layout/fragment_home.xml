@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
@@ -14,12 +22,12 @@
         android:text="HMS Hostel"
         android:textSize="40dp"/>
 
-<TableLayout
+    <TableLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="70dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
+    android:paddingRight="10dp">
     <TableRow android:background="#0079D6" android:padding="5dp">
         <TextView
             android:layout_width="wrap_content"
@@ -68,8 +76,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:layout_gravity="center"
-            android:src="@drawable/yes"/>
+            android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/i2"
@@ -77,16 +84,14 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:gravity="center"
-            android:src="@drawable/yes"/>
+            android:gravity="center" />
         <ImageView
             android:id="@+id/i3"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:gravity="center"
-            android:src="@drawable/yes"/>
+            android:gravity="center" />
     </TableRow>
     <TableRow android:background="#DAE8FC" android:padding="5dp">
         <TextView
@@ -103,8 +108,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:layout_gravity="center"
-            android:src="@drawable/yes"/>
+            android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/i5"
@@ -112,8 +116,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:gravity="center"
-            android:src="@drawable/yes"/>
+            android:gravity="center" />
         <ImageView
             android:id="@+id/i6"
             android:layout_width="25dp"
@@ -147,16 +150,14 @@
         android:layout_height="25dp"
         android:layout_weight="1"
         android:cropToPadding="true"
-        android:gravity="center"
-        android:src="@drawable/yes"/>
+        android:gravity="center" />
     <ImageView
         android:id="@+id/i9"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_weight="1"
         android:cropToPadding="true"
-        android:gravity="center"
-        android:src="@drawable/yes"/>
+        android:gravity="center" />
     </TableRow>
     <TableRow android:background="#DAE8FC" android:padding="5dp">
         <TextView
@@ -173,8 +174,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-        android:layout_gravity="center"
-        android:src="@drawable/yes"/>
+        android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/i11"
@@ -208,8 +208,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:cropToPadding="true"
-            android:layout_gravity="center"
-            android:src="@drawable/yes"/>
+            android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/i14"
@@ -229,44 +228,65 @@
             />
     </TableRow>
 </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="299dp"
+        android:layout_marginEnd="32dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="* check ones are filled"
+        android:textSize="15dp"
+        android:textStyle="bold" />
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="300dp">
-        <TableRow android:background="#0079D6" android:padding="5dp">
+        android:layout_marginTop="350dp">
+
+        <TableRow
+            android:background="#0079D6"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="Mess"
                 android:textSize="15dp"
-                android:textStyle="bold"
-                android:text="Mess" />
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="Breakfast"
                 android:textSize="15dp"
-                android:textStyle="bold"
-                android:text="Breakfast" />
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="Lunch"
                 android:textSize="15dp"
-                android:textStyle="bold"
-                android:text="Lunch" />
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="Dinner"
                 android:textSize="15dp"
-                android:textStyle="bold"
-                android:text="Dinner" />
+                android:textStyle="bold" />
         </TableRow>
         <TableRow android:background="#DAE8FC" android:padding="5dp">
         <TextView
@@ -468,3 +488,4 @@
     </TableLayout>
 
 </RelativeLayout>
+    </ScrollView>

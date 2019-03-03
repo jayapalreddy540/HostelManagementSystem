@@ -57,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
     private CircleImageView mDisplayImage;
     private TextView mName;
     private TextView mStatus;
-    private Button mStatusBtn;
+    private Button mStatusBtn,mChangePass;
     private Button mImgBtn;
     private ProgressDialog mProgressDialog;
     private static final int GALLERY_PICK=1;
@@ -75,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         mStatus=(TextView)findViewById(R.id.settings_profile);
         mStatusBtn=(Button)findViewById(R.id.settings_changeStatusBtn);
         mImgBtn=(Button)findViewById(R.id.settings_changeImgBtn);
+        mChangePass=(Button)findViewById(R.id.chgpass);
 
         mImageStorage=FirebaseStorage.getInstance().getReference();
 
@@ -148,6 +149,14 @@ public class SettingsActivity extends AppCompatActivity {
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .start(SettingsActivity.this);
                         */
+            }
+        });
+
+        mChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent statusIntent=new Intent(SettingsActivity.this,ChangePassActivity.class);
+                startActivity(statusIntent);
             }
         });
     }

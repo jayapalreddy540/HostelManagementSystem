@@ -28,7 +28,7 @@ public class RoomFragment extends Fragment {
     private  int[] mRoom={0,R.id.c1,R.id.c2,R.id.c3,R.id.c4,R.id.c5,R.id.c6,R.id.c7,R.id.c8,R.id.c9,R.id.c10,R.id.c11,R.id.c12,R.id.c13,R.id.c14,R.id.c15};
     private CheckBox[] chk=new CheckBox[16];
     private Button submit;
-    private Boolean[] alloc=new Boolean[16];
+    private String[] alloc=new String[16];
     private DatabaseReference mRef;
 
     public RoomFragment() {
@@ -51,9 +51,9 @@ public class RoomFragment extends Fragment {
             public void onClick(View v) {
                 for(int i=1;i<=15;i++){
                     if(chk[i].isChecked()){
-                        alloc[i]=true;
+                        alloc[i]="true";
                     }
-                    else alloc[i]=false;
+                    else alloc[i]="false";
                 }
                 try {
                     for (int i = 1; i <= 15; i++) {
