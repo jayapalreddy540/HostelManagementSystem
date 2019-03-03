@@ -1,6 +1,7 @@
 package tk.codme.hostelmanagementsystem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,9 +65,21 @@ public class OutingFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull OutingViewHolder usersViewHolder, int i, @NonNull Outing users) {
 
-                usersViewHolder.setDate(users.getDate());
+                usersViewHolder.setIntime(users.getIntime());
                 usersViewHolder.setReason(users.getReason());
-
+                usersViewHolder.setOutime(users.getOuttime());
+                usersViewHolder.setName(users.getName());
+           /*     final String user_id=getRef(i).getKey();
+                usersViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profileIntent=new Intent(getContext(),ProfileActivity.class);
+                        profileIntent.putExtra("user_id",user_id);
+                        profileIntent.putExtra("designation","student");
+                        startActivity(profileIntent);
+                    }
+                });
+            */
             }
         };
 

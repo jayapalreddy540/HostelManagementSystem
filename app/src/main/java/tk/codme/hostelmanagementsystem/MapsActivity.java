@@ -162,9 +162,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
+
         LatLng myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         try{marker.setPosition(myCoordinates);}catch(Exception e){}
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCoordinates,16.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCoordinates,16.0f));  // zooming map
 
         SharedPreferences sp=getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
         sp.edit().putString("designation",designation).apply();

@@ -97,7 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+         />
 
     <TextView
         android:id="@+id/headingtext"
@@ -134,6 +134,7 @@
             android:layout_marginEnd="0dp"
             android:ems="10"
             android:hint="Mobile"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:maxLength="10"/>
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

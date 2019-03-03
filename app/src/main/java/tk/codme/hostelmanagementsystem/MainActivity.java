@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         TextView navUsername = (TextView) headerView.findViewById(R.id.textView);
         navUsername.setText(name);
 
-        final CircleImageView imageview=(CircleImageView)headerView.findViewById(R.id.imageView);
+        final CircleImageView imageview=(CircleImageView)headerView.findViewById(R.id.imageView);  // image setting
         if (!image.equals("default")) {
             //Picasso.get().load(image).placeholder(R.drawable.default_img).into(mDisplayImage);
             Picasso.get().load(image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.default_img).into(imageview, new Callback() {
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
 
         mSignoutProgress=new ProgressDialog(MainActivity.this);
 
-        if(currentUser!=null) {
+        if(currentUser!=null) {   // when a user is there
             currentUid = currentUser.getUid();
             Log.d("desig",designation);
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(designation+"s").child(currentUid);
@@ -272,9 +272,10 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if(id==R.id.nav_home){
-            HomeFragment fragmenthome = new HomeFragment();
+           HomeFragment fragmenthome = new HomeFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_frame,fragmenthome).commit();
+
         }
 
         else if (id == R.id.nav_members) {
@@ -314,11 +315,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(mapIntent);
 
         } else if (id == R.id.nav_outing) {
-            TimerFragment fragmenttime= new TimerFragment();
+            DateTimeFragment fragmenttime= new DateTimeFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_frame,fragmenttime).commit();
-            /*Intent timeIntent=new Intent(MainActivity.this,TimerFragment.class);
-            startActivity(timeIntent);*/
 
         } else if (id == R.id.nav_rooms) {
             RoomFragment fragmentroom= new RoomFragment();

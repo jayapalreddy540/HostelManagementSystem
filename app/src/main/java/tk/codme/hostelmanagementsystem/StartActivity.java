@@ -16,7 +16,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-
+//start logo
        hmsImg=(ImageView)findViewById(R.id.hmsImg);
 
 

@@ -114,7 +114,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="0dp"
-            android:ems="10"
+            android:maxLength="10"
             android:hint="Mobile"
             android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -139,7 +139,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="0dp"
-            android:ems="10"
+            android:maxLength="10"
             android:hint="Parent Mobile"
             android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>

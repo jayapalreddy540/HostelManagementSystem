@@ -86,23 +86,7 @@ public class FeedBackActivity extends AppCompatActivity {
                         }
                     });
 
-                  /*  mFeedbackDatabase.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String name = dataSnapshot.child("name").getValue().toString();
-                            String email = dataSnapshot.child("email").getValue().toString();
-                            String feedback = dataSnapshot.child("feedback").getValue().toString();
-                            String feedbackType = dataSnapshot.child("feedbackType").getValue().toString();
-                            String bRequiresResponse=dataSnapshot.child("bRequiresResponse").getValue().toString();
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                    */
                 } else {
                     Toast.makeText(getApplicationContext(), "please fill all  the fields in the form ", Toast.LENGTH_LONG).show();
                 }

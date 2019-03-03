@@ -240,7 +240,7 @@
         android:layout_marginEnd="32dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="* check ones are filled"
+        android:text="* checked ones are filled"
         android:textSize="15dp"
         android:textStyle="bold" />
     <TableLayout

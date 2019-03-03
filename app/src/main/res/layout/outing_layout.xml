@@ -17,29 +17,53 @@
             android:src="@drawable/default_img" />
 
         <TextView
-            android:id="@+id/date"
-            android:layout_width="190dp"
+            android:id="@+id/intime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="116dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="105dp"
-            android:text="name"
+            android:layout_marginStart="102dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="24dp"
+            android:text="intime"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/reason"
-            android:layout_width="224dp"
+            android:id="@+id/outtime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="117dp"
-            android:layout_marginTop="42dp"
-            android:layout_marginEnd="70dp"
-            android:text="type"
+            android:layout_marginStart="108dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="18dp"
+            android:text="outtime"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/reason"
+            android:layout_width="227dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="25dp"
+            android:text="reason"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="119dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="281dp"
+            android:text="name"
             android:textStyle="italic" />
 
     </RelativeLayout>

@@ -6,19 +6,37 @@ public class Outing {
 
     }
 
-    public String date,reason;
+    public String intime,outtime,reason,name;
 
-    public String getDate() {
-        return date;
+    public String getName() {
+        return name;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Outing(String date, String reason) {
-        this.date = date;
+    public String getIntime() {
+        return intime;
+    }
+
+    public void setIntime(String intime) {
+        this.intime = intime;
+    }
+
+    public Outing(String intime, String outtime, String reason, String name) {
+        this.intime = intime;
+        this.outtime = outtime;
         this.reason = reason;
+        this.name = name;
+    }
+
+    public String getOuttime() {
+        return outtime;
+    }
+
+    public void setOuttime(String outtime) {
+        this.outtime = outtime;
     }
 
     public String getReason() {

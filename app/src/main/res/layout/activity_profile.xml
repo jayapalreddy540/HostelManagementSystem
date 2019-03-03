@@ -94,7 +94,6 @@
 </androidx.cardview.widget.CardView>
 
 
-
         <ImageButton
             android:id="@+id/loc"
             android:layout_width="70dp"
@@ -102,7 +101,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="38dp"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="42dp"
             android:scaleType="fitCenter"
             android:src="@drawable/location" />

@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +29,13 @@ public class WardenListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private ImageButton phone,sms;
     private View mMainView;
+    private String designation;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mMainView = inflater.inflate(R.layout.activity_wardenlist, container, false);
+
+        SharedPreferences sp=this.getActivity().getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        designation=sp.getString("designation","");
 
         mAuth=FirebaseAuth.getInstance();
         String cid=mAuth.getCurrentUser().getUid();
@@ -93,9 +99,14 @@ public class WardenListFragment extends Fragment {
                                             startActivity(profileIntent);
                                         }
                                         if (which == 1) {
-                                            Intent stdIntent = new Intent(getContext(), StudentListFragment.class);
-                                            stdIntent.putExtra("user_id", user_id);
-                                            startActivity(stdIntent);
+
+                                            if(designation.equals("admin")){
+                                                Intent stdIntent = new Intent(getContext(), StudentListFragment.class);
+                                                stdIntent.putExtra("user_id", user_id);
+                                                startActivity(stdIntent);
+                                            }
+
+
                                         }
                                     }
                                 });

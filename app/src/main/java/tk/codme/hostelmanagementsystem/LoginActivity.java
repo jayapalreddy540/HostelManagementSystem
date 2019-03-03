@@ -90,12 +90,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email=mLoginEmail.getEditText().getText().toString();
-                String password=mLoginPassword.getEditText().getText().toString();
+                String password=mLoginPassword.getEditText().getText().toString();   // login button
                designation=checkButton(v);
 
                 if(!TextUtils.isEmpty(email)||!TextUtils.isEmpty((password))){
                     mLoginProgress.setTitle("logging  In");
-                    mLoginProgress.setMessage("Please wait while we check your credentials");
+                    mLoginProgress.setMessage("Please wait while we check your credentials");     //
                     mLoginProgress.show();
                     loginUser(email,password);
                 }
@@ -103,14 +103,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public String checkButton(View view) {
+    public String checkButton(View view) {       // checking designation
         int radioId=usergroup.getCheckedRadioButtonId();
         userstate=findViewById(radioId);
         return ((String) userstate.getText());
     }
 
     private void loginUser(final String email, final String password) {
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {  //  firebase authentication with email
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -129,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             String token = task.getResult().getToken();
 
-                            mUserDatabase.child("device_token").setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            mUserDatabase.child("device_token").setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() { //device_token storing in database
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
