@@ -71,17 +71,20 @@ public class MainActivity extends AppCompatActivity
         name=sp.getString("name","");
         image=sp.getString("image","default");
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Feedback", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent feedback=new Intent(MainActivity.this,FeedBackActivity.class);
-                startActivity(feedback);
-            }
-        });
+        FloatingActionButton fab;
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        if(designation.equals("student")) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Feedback", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    Intent feedback = new Intent(MainActivity.this, FeedBackActivity.class);
+                    startActivity(feedback);
+                }
+            });
+        }
+        else { fab.setVisibility(View.INVISIBLE);}
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity
             nav_Menu.findItem(R.id.nav_addmembers).setVisible(false);
             nav_Menu.findItem(R.id.nav_feedbacks).setVisible(false);
             nav_Menu.findItem(R.id.nav_rooms).setVisible(false);
+            nav_Menu.findItem(R.id.nav_outingdetails).setVisible(false);
         }
         else if(designation.equals("warden")){
             nav_Menu.findItem(R.id.nav_outing).setVisible(false);
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity
         else if(designation.equals("admin")){
             nav_Menu.findItem(R.id.nav_outing).setVisible(false);
             nav_Menu.findItem(R.id.nav_rooms).setVisible(false);
+            nav_Menu.findItem(R.id.nav_outingdetails).setVisible(false);
         }
 
 
@@ -222,6 +227,8 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu,menu);
+        if(designation.equals("warden")||designation.equals("admin"))
+            menu.getItem(1).setEnabled(false);
         return true;
     }
 
@@ -231,6 +238,14 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         super.onOptionsItemSelected(item);
+        if(item.getItemId()==R.id.main_feedback_btn){
+            Intent usersIntent=new Intent(MainActivity.this,FeedBackActivity.class);
+            startActivity(usersIntent);
+        }
+        if(item.getItemId()==R.id.main_settings_btn){
+            Intent settingsIntent=new Intent(MainActivity.this,SettingsActivity.class);
+            startActivity(settingsIntent);
+        }
         if(item.getItemId()==R.id.main_logout_btn){
             SharedPreferences preferences = getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
@@ -244,14 +259,7 @@ public class MainActivity extends AppCompatActivity
             sendToStart();
         }
 
-        if(item.getItemId()==R.id.main_settings_btn){
-            Intent settingsIntent=new Intent(MainActivity.this,SettingsActivity.class);
-            startActivity(settingsIntent);
-        }
-        if(item.getItemId()==R.id.main_feedback_btn){
-            Intent usersIntent=new Intent(MainActivity.this,FeedBackActivity.class);
-            startActivity(usersIntent);
-        }
+
         return true;
     }
 
@@ -319,6 +327,11 @@ public class MainActivity extends AppCompatActivity
             FeedBackFragment fragmentfeedback= new FeedBackFragment();
             FragmentManager manager=getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_frame,fragmentfeedback).commit();
+        }
+        else if (id == R.id.nav_outingdetails) {
+            OutingFragment fragmentouting = new  OutingFragment();
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.content_frame, fragmentouting).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

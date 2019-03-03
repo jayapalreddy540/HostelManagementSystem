@@ -28,6 +28,9 @@
             android:id="@+id/nav_outing"
             android:icon="@drawable/common_google_signin_btn_icon_dark"
             android:title="Outing" />
+        <item android:id="@+id/nav_outingdetails"
+            android:icon="@drawable/common_google_signin_btn_icon_dark"
+            android:title="Outings"/>
         <item
             android:id="@+id/nav_feedbacks"
             android:icon="@drawable/ic_menu_share"

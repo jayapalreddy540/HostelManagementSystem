@@ -34,7 +34,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="192dp"
-        android:inputType="phone"
         android:text="Mobile"
         android:textColor="@android:color/white"
         android:textSize="20sp" />

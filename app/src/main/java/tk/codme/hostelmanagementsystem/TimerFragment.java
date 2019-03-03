@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,20 +93,24 @@ public class TimerFragment extends Fragment {
         mRegProgress.setCanceledOnTouchOutside(false);
         mRegProgress.show();
 
+        SharedPreferences sp=this.getActivity().getSharedPreferences("tk.codme.hostelmanagementsystem", Context.MODE_PRIVATE);
+        String caretaker=sp.getString("caretaker","");
+        Log.d("caretaker",caretaker);
         FirebaseUser current_user=FirebaseAuth.getInstance().getCurrentUser();
         String uid=current_user.getUid();
         mRootRef= FirebaseDatabase.getInstance().getReference();
 
-        mRef=mRootRef.child("outing").child(uid);
+        mRef=mRootRef.child("outing").child(caretaker);
 
         // DatabaseReference newOutingref = mRef.push();
         // String newOutingId = newOutingref.getKey();
 
        date=calendar.get(Calendar.YEAR)+"-"+calendar.get(Calendar.MONTH)+"-"+calendar.get(Calendar.DAY_OF_MONTH);
         String reason1=reason.getEditableText().toString();
-        HashMap<String,Object> userMap=new HashMap<>();
+        HashMap<String,String> userMap=new HashMap<>();
         userMap.put("reason",reason1);
         userMap.put("date",date);
+        userMap.put("uid",uid);
         String timestamp=calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONTH)+""+calendar.get(Calendar.DAY_OF_MONTH)+""+calendar.get(Calendar.HOUR_OF_DAY)+calendar.get(Calendar.MINUTE);
         mRef.child(timestamp).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
